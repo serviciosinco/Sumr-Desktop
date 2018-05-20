@@ -23,7 +23,6 @@
         "electronVersion": "1.8.6",
         "asar": true,
         "directories": {
-            "app": "/Users/desarolloportatil/Dropbox/(DB) Sites/(Develop)/crm_sumr/electron",
             "output": "dist"
         },
         "mac": {
