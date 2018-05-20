@@ -27,6 +27,7 @@
             "output": "dist"
         },
         "win": {
+	        "requestedExecutionLevel": "highestAvailable",
             "target": [
                 {
                     "target": "nsis",
