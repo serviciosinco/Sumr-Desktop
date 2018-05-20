@@ -41,7 +41,7 @@ function _createWindow(p){
 		frame:true, 
 		show:false,
 		titleBarStyle:'hidden',
-		backgroundColor: '#000',
+		backgroundColor: '#23243D',
 		webPreferences: {
 			partition: "persist:main"
 		}

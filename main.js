@@ -90,9 +90,11 @@ _eGet.on('_shw_cl', function(e, a) {
 app.on('ready',()=>{
   	
   	const session = require('electron').session;
-
-	menu._setBar();
-	menu._barIcn();
+  	
+  	if(_f.isMac()){
+		menu._setBar();
+		menu._barIcn();
+	}
 	
 	_f._createWindow();
 	_ShortCuts();
