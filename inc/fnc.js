@@ -38,7 +38,6 @@ function _createWindow(p){
 		title:'SUMR',
 		width:400, 
 		height:500, 
-		frame:true, 
 		show:false,
 		titleBarStyle:'hidden',
 		backgroundColor: '#23243D',
@@ -50,7 +49,7 @@ function _createWindow(p){
 	if(isMac()){
 		__op['frame']=false	
 	}else{
-		
+		__op['frame']=false	
 	}
 	
 	_mreg='';
