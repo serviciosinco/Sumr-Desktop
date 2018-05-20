@@ -23,7 +23,7 @@
         "electronVersion": "2.0.1",
         "asar": true,
         "directories": {
-            "app": "C:\\Users\\DEV_PC\\Documents\\GitHub\\DESKTOP-SUMR",
+            "app": "./",
             "output": "dist"
         },
         "win": {
@@ -46,7 +46,10 @@
                 }
             ],
             "category": "public.app-category.productivity"
-        }
+        },
+        "nsis": {
+			"oneClick": false
+		}
     },
     "dependencies": {
         "electron-config": "^1.0.0",
