@@ -1,7 +1,7 @@
 {
     "name": "SUMR",
     "version": "1.0.0",
-    "description": "CRM - Versión para Escritorio",
+    "description": "",
     "main": "main.js",
     "scripts": {
         "start": "electron main.js",
@@ -20,10 +20,21 @@
         "appId": "com.electron.SUMR",
         "copyright": "Copyright © 2018 Servicios.in",
         "productName": "SUMR",
-        "electronVersion": "1.8.6",
+        "electronVersion": "2.0.1",
         "asar": true,
         "directories": {
+            "app": "C:\\Users\\DEV_PC\\Documents\\GitHub\\DESKTOP-SUMR",
             "output": "dist"
+        },
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "arch_all"
+                    ]
+                }
+            ]
         },
         "mac": {
             "target": [
