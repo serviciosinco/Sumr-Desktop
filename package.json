@@ -10,7 +10,7 @@
         "build-mas": "electron-packager . electron-app --platform=mas --icon build/icon.icns --overwrite",
         "build-linux": "electron-packager . electron-app --platform=linux --icon build/png/512x512.png --overwrite",
         "build-win32": "electron-packager . electron-app --platform=win32 --icon build/icon.ico --overwrite",
-        "build-win64": "electron-packager . electron-app --out=dist/ --platform=win32 --arch=x64 --version=0.34.1 --icon=assets/win/icon.ico --overwrite",
+        "build-win64": "electron-packager . electron-app --platform=win32 --icon build/icon.ico --arch=x64 --version=0.34.1 --overwrite",
         "build": "npm run build-darwin && npm run build-mas && npm run build-linux && npm run build-win64 && npm run build-win32",
         "sv-win": "electron-packager . electron-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=build/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=Electron Tutorial App"
     },
