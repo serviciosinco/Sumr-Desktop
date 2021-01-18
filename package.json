@@ -2,10 +2,12 @@
     "name": "SUMR",
     "version": "1.0.0",
     "description": "SUMR App Desktop",
-    "main": "main.js",
+    "main": "./src/main.js",
     "scripts": {
-        "start": "electron main.js",
-        "make": "electron-forge make"
+        "start": "electron ./src/main.js",
+        "make:clear": "rm -rf ./out/SUMR-darwin-x64 && rm -rf ./out/make",
+        "make:organize": "mv ./out/make/SUMR-1.0.0.dmg ./out/SUMR.dmg && npm run make:clear",
+        "make": "npm prune && electron-forge make && npm run make:organize"
     },
     "author": "Servicios.in",
     "license": "ISC",
@@ -31,6 +33,7 @@
         "@electron-forge/maker-rpm": "^6.0.0-beta.54",
         "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
         "@electron-forge/maker-zip": "^6.0.0-beta.54",
+        "@electron-forge/plugin-webpack": "^6.0.0-beta.54",
         "electron": "^11.2.0",
         "electron-builder": "^22.9.1",
         "electron-packager": "^15.2.0",
