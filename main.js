@@ -8,8 +8,7 @@ const electron = require('electron')
 const LocalSCut = require('electron-localshortcut');
 
 
-const Config = require('electron-config');
-
+const Config = require('electron-store');
 const config = new Config();
 
 
@@ -25,7 +24,7 @@ const _ses={};
 
 function _ShortCuts(){
 
-	LocalSCut.register(win, 'Ctrl+0', () => {
+	LocalSCut.register(mWin, 'Ctrl+0', () => {
 		
 		if(config.get('menu_dvlp')=='ok'){
             config.set('menu_dvlp', null); 
@@ -44,18 +43,20 @@ _eGet.on('_rSze', function(e, a) {
 	
 	_f._RszeOn({ minH:800, minW:1200 }); 
 	
-	_ses.clients = config.get('clients');
+	_ses.clients = config.get('clients'); 
 	_ses.user = config.get('user');
 	_ses.account = config.get('account');
 	_ses.subdomain = config.get('subdomain');
 	
-	if(!_f.isN(_ses.clients) && !_f.isN(_ses.user)){ 
-		win.webContents.send('_r_set',{ 
+	if(!_f.isN(_ses.clients) && !_f.isN(_ses.user)){
+		
+		mWin.webContents.send('_r_set',{ 
 			cl:_ses.clients, 
 			us:_ses.user,
 			acc:_ses.account, 
 			sbd:_ses.subdomain
 		});
+		
 	}
 		
 });
@@ -63,7 +64,8 @@ _eGet.on('_rSze', function(e, a) {
 
 
 
-_eGet.on('_m_set', function(e, a) {   
+_eGet.on('_m_set', function(e, a) { 
+	log.info(a.g+' -> '+a.v);  
 	config.set(a.g, a.v);
 });
 
@@ -73,7 +75,7 @@ _eGet.on('_m_clr', function(e, a) {
 	config.set('account', null);
 	config.set('subdomain', null);
 	
-	win.webContents.send(a.cl);
+	mWin.webContents.send(a.cl);
 });
 
 _eGet.on('_m_bdgtot', function(e, a) {  
@@ -91,11 +93,13 @@ app.on('ready',()=>{
   	
   	const session = require('electron').session;
 
-	menu._setBar();
-	menu._barIcn();
-	
 	_f._createWindow();
 	_ShortCuts();
+	
+	if(_f.isMac()){
+		menu._setBar();
+		menu._barIcn();
+	}
     
 });
 

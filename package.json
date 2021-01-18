@@ -1,56 +1,39 @@
 {
     "name": "SUMR",
     "version": "1.0.0",
-    "description": "",
+    "description": "SUMR App Desktop",
     "main": "main.js",
     "scripts": {
         "start": "electron main.js",
-        "electron-toolkit": "electron ./node_modules/electron-toolkit",
-        "build-darwin": "electron-packager . electron-app --platform=darwin --icon build/icon.icns --overwrite",
-        "build-mas": "electron-packager . electron-app --platform=mas --icon build/icon.icns --overwrite",
-        "build-linux": "electron-packager . electron-app --platform=linux --icon build/png/512x512.png --overwrite",
-        "build-win32": "electron-packager . electron-app --platform=win32 --icon build/icon.ico --overwrite",
-        "build": "npm run build-darwin && npm run build-mas && npm run build-linux && npm run build-win32",
-        "sv-win": "electron-packager . electron-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=build/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=Electron Tutorial App"
+        "make": "electron-forge make"
     },
     "author": "Servicios.in",
     "license": "ISC",
-    "build": {
-        "appId": "com.electron.SUMR",
-        "copyright": "Copyright © 2018 Servicios.in",
-        "productName": "SUMR",
-        "electronVersion": "1.8.6",
-        "asar": true,
-        "directories": {
-            "app": "/Users/desarolloportatil/Dropbox/(DB) Sites/(Develop)/crm_sumr/electron",
-            "output": "dist"
-        },
-        "mac": {
-            "target": [
-                {
-                    "target": "dmg",
-                    "arch": [
-                        "x64"
-                    ]
-                }
-            ],
-            "category": "public.app-category.productivity"
-        }
+    "config": {
+        "forge": "./forge.config.js"
     },
     "dependencies": {
-        "electron-config": "^1.0.0",
-        "electron-drag": "^1.2.0",
-        "electron-json-storage": "^4.1.0",
-        "electron-localshortcut": "^3.1.0",
-        "electron-log": "^2.2.14",
-        "electron-settings": "^3.1.4",
+        "electron-drag": "^2.0.0",
+        "electron-json-storage": "^4.3.0",
+        "electron-localshortcut": "^3.2.1",
+        "electron-log": "^4.3.1",
+        "electron-settings": "^4.0.2",
+        "electron-squirrel-startup": "^1.0.0",
+        "electron-store": "^6.0.1",
         "jquery": "^3.3.1",
-        "open": "0.0.5"
+        "open": "^7.3.1",
+        "update-electron-app": "^2.0.1"
     },
     "devDependencies": {
-        "electron": "^1.8.6",
-        "electron-builder": "^20.10.0",
-        "electron-packager": "^12.0.1",
-        "electron-toolkit": "^1.0.24"
+        "@electron-forge/cli": "^6.0.0-beta.54",
+        "@electron-forge/maker-deb": "^6.0.0-beta.54",
+        "@electron-forge/maker-dmg": "^6.0.0-beta.54",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+        "@electron-forge/maker-zip": "^6.0.0-beta.54",
+        "electron": "^11.2.0",
+        "electron-builder": "^22.9.1",
+        "electron-packager": "^15.2.0",
+        "electron-prebuilt-compile": "8.2.0"
     }
 }

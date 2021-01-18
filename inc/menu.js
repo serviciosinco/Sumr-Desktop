@@ -3,9 +3,11 @@ var _g = require('./glbl');
 var _t = require('./lng/es');
 
 const nativeImage = require('electron').nativeImage
-const Config = require('electron-config');
+const Config = require('electron-store');
 const config = new Config();
 let appIcon = null
+
+var log = require('electron-log');
 
 const electron = require('electron')
 const {app, Menu, globalShortcut} = electron
@@ -153,15 +155,15 @@ function _setBar(p){
 	                submenu:[
 	                {
 		            	label:_t.developer_tools_free,
-						click:()=>{ win.webContents.openDevTools({ mode:'detach' }) }    
+						click:()=>{ mWin.webContents.openDevTools({ mode:'detach' }) }    
 	                },
 	                {
 		            	label:_t.developer_tools_right,
-						click:()=>{ win.webContents.openDevTools({ mode:'right' }) }    
+						click:()=>{ mWin.webContents.openDevTools({ mode:'right' }) }    
 	                },
 	                {
 		            	label:_t.developer_tools_left,
-						click:()=>{ win.webContents.openDevTools({ mode:'left' }) }    
+						click:()=>{ mWin.webContents.openDevTools({ mode:'left' }) }    
 	                }]
 	            }
 	        ]};
