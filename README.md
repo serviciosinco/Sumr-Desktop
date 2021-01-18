@@ -1,4 +1,4 @@
-[![Sumr Logo](https://www.sumr.co/static/media/logo.70735e5b.svg)](https://sumr.co)
+[![Sumr Logo](https://www.sumr.co/static/media/logo.70735e5b.svg | width=100)](https://sumr.co)
 
 [![CircleCI Build Status](https://circleci.com/gh/electron/electron/tree/master.svg?style=shield)](https://circleci.com/gh/electron/electron/tree/master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/4lggi9dpjc1qob7k/branch/master?svg=true)](https://ci.appveyor.com/project/electron-bot/electron-ljo26/branch/master)
