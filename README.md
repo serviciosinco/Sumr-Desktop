@@ -30,7 +30,7 @@ To run locally
 npm run start
 ```
 
-To package and build imnstallers ( MacOsx / Windows )
+To package and build installers ( MacOsx / Windows )
 
 ```sh
 npm run make
