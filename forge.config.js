@@ -11,7 +11,7 @@ module.exports = {
       {
         name: '@electron-forge/maker-dmg',
         config: {
-          background: './build/background.png',
+          background: './build/osx/background.png',
           format: 'ULFO'
         }
       }
