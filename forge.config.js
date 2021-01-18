@@ -1,5 +1,7 @@
 module.exports = {
-    packagerConfig: {},
+    packagerConfig: {
+      icon: './build/osx/icon.icns'
+    },
     makers: [
       {
         name: '@electron-forge/maker-zip',

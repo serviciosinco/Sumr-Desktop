@@ -5,17 +5,7 @@
     "main": "main.js",
     "scripts": {
         "start": "electron main.js",
-        "electron-toolkit": "electron ./node_modules/electron-toolkit",
-        "build": "npm run build-darwin && npm run build-win64 && npm run build-win32",
-        "build-darwin": "electron-packager . SUMR --out=dist/ --prune=true --platform=darwin --icon build/icon.icns --overwrite",
-        "build-win32": "electron-packager . SUMR --out=dist/ --prune=true --platform=win32 --icon build/icon.ico --overwrite",
-        "build-win64": "electron-packager . SUMR --out=dist/ --prune=true --platform=win32 --icon build/icon.ico --arch=x64 --version=0.34.1 --overwrite",
-        "installer-mac": "electron-installer-dmg ./dist/SUMR-darwin-x64/SUMR.app name_of_the_installer --overwrite",
-        "installer-win": "electron-installer-windows --src dist/SUMR-win32-x64/ --dest dist/releases/",
-        "pack": "electron-forge start",
-        "make": "electron-forge make",
-
-        "macosx": "npm run build-darwin && npm run installer-mac"
+        "make": "electron-forge make"
     },
     "author": "Servicios.in",
     "license": "ISC",
