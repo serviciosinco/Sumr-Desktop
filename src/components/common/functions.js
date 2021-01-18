@@ -1,19 +1,14 @@
-var _g = require('./glbl');
-
-
 const electron = require('electron')
 const {app, BrowserWindow, globalShortcut} = electron
-
-
 const Config = require('electron-store');
 const config = new Config();
+const { GetGlobal } = require('./globals');
 const _ses={};
+
 
 var log = require('electron-log');
 
-
-
-function __Onl(){
+const isOnline = ()=>{
 	
 	var _o = mWin.webContents.send('_r_onl');
 	
@@ -26,11 +21,11 @@ function __Onl(){
 }
 
 
-function isMac(){
+const isMac = ()=>{
 	if(process.platform == 'darwin'){ return true; }else{ return false; }
 }
 
-function _createWindow(p){	
+const createWindow = (p)=>{	
 	
 	_ses.subdomain = config.get('subdomain');
 	
@@ -42,7 +37,7 @@ function _createWindow(p){
 		titleBarStyle:'hidden',
 		backgroundColor: '#23243D',
 		webPreferences: {
-			contextIsolation: true,
+			contextIsolation: false,
 			partition: "persist:main",
 			nodeIntegration: true
 		}
@@ -61,16 +56,16 @@ function _createWindow(p){
 	if(!isN(_ses.subdomain) || (!isN(p) && !isN(p.main) && p.main == 'ok')){
 		
 		config.set('menu_main_clients', 'ok');
-		_url = 'https://'+_ses.subdomain+'.'+_dmn()+'/?_dsktp=ok&__r='+Math.random()+_mreg;
+		_url = 'https://'+_ses.subdomain+'.'+GetDomain()+'/?_dsktp=ok&__r='+Math.random()+_mreg;
 		
 	}else{
 		config.set('menu_main_clients', 'no');
-		_url = _cl_url();
+		_url = GoToAccounts();
 	}
 	
 	mWin = new BrowserWindow(__op);
 	mWin.setTitle('SUMR');
-	_ldCnt({ u:_url });
+	LoadContent({ u:_url });
 	mWin.setMinimumSize(400, 500);
 	mWin.show()
 	
@@ -88,9 +83,9 @@ function _createWindow(p){
 
 }
 
-function _ldCnt(p){
+const LoadContent = (p)=>{
 	
-	if(!isN(p) && !isN(p.u) && __Onl()){
+	if(!isN(p) && !isN(p.u) && isOnline()){
 		
 		
 		
@@ -128,7 +123,7 @@ function _ldCnt(p){
 }
 
 
-function _Rfrsh(p){
+const Refresh = (p)=>{
 	
 	if(!isN(p) && !isN(p.dvlp)){
 		
@@ -144,12 +139,12 @@ function _Rfrsh(p){
 		
 		
 		if(config.get('menu_dvlp_test') == 'ok'){
-			var url_f = url.replace(_g.domain_production, _g.domain_tester);
+			var url_f = url.replace( GetGlobal('domain_production'), GetGlobal('domain_tester'));
 		}else{
-			var url_f = url.replace(_g.domain_tester, _g.domain_production);
+			var url_f = url.replace( GetGlobal('domain_tester'), GetGlobal('domain_production') );
 		}
 		
-		_ldCnt({ u:url_f+_mreg });
+		LoadContent({ u:url_f+_mreg });
 			
 	}else{
 		
@@ -158,7 +153,7 @@ function _Rfrsh(p){
 	}
 }
 	
-function _Cche_clr(){
+const ClearCache = ()=>{
 	/*event.sender.send('tray-removed')*/	
 	
 	var ses = mWin.webContents.session;
@@ -168,11 +163,11 @@ function _Cche_clr(){
 
 	
 	ses.clearCache(function(){
-		_Rfrsh();	
+		Refresh();	
 	});		
 }
 
-function isN(p){ 
+const isN = (p)=>{ 
 	try{
 		if(p==undefined || p==null || p==''){ return true;}else{return false;} 
 	}catch(err) {
@@ -180,7 +175,7 @@ function isN(p){
 	}
 }
 
-function _gotoAcc(p){
+const gotoAcc = (p)=>{
 	
 	if(!isN(p)){		
 		
@@ -193,13 +188,13 @@ function _gotoAcc(p){
 		config.set('menu_main_clients', 'ok');
 		if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 		
-		_ldCnt({ u:p.url+'?__r='+Math.random()+_mreg });
+		LoadContent({ u:p.url+'?__r='+Math.random()+_mreg });
 		
 	}
 }
 
 
-function _RszeOn(p){
+const RszeOn = (p)=>{
 	
 	_w = config.get('width');
 	_h = config.get('height');
@@ -230,33 +225,29 @@ function _RszeOn(p){
 	mWin.focus();
 }
 
-function _dmn(){
+const GetDomain = ()=>{
 	if(config.get('menu_dvlp_test')=='ok'){
-		dmn = _g.domain_tester;
+		dmn = GetGlobal('domain_tester');
 	}else{
-		dmn = _g.domain_production;
+		dmn = GetGlobal('domain_production');
 	}	
 	
 	return dmn;
 }
 
-function _cl_url(){
-
-	var _u = 'https://account.'+_dmn()+'/?_dsktp=ok&__r='+Math.random();
-	
+const GoToAccounts = ()=>{
+	let _u = 'https://account.'+GetDomain()+'/?_dsktp=ok&__r='+Math.random();
 	return _u;	
 }
 
-
-exports._createWindow = _createWindow
-exports._ldCnt = _ldCnt
-
-exports._Rfrsh = _Rfrsh;
-exports.isMac = isMac;
-exports.isN = isN;
-exports._Cche_clr = _Cche_clr;
-exports._gotoAcc = _gotoAcc;
-exports._RszeOn = _RszeOn;
-
-exports._dmn = _dmn;
-exports._cl_url = _cl_url;
+module.exports = {
+    createWindow,
+	LoadContent,
+	Refresh,
+	isMac,
+	isN,
+	ClearCache,
+	gotoAcc,
+	RszeOn,
+	GoToAccounts
+};
