@@ -5,7 +5,7 @@ const electron = require('electron')
 const {app, BrowserWindow, globalShortcut} = electron
 
 
-const Config = require('electron-config');
+const Config = require('electron-store');
 const config = new Config();
 const _ses={};
 
@@ -15,7 +15,7 @@ var log = require('electron-log');
 
 function __Onl(){
 	
-	var _o = win.webContents.send('_r_onl');
+	var _o = mWin.webContents.send('_r_onl');
 	
 	if(_o != false){
 		return true;
@@ -42,7 +42,9 @@ function _createWindow(p){
 		titleBarStyle:'hidden',
 		backgroundColor: '#23243D',
 		webPreferences: {
-			partition: "persist:main"
+			contextIsolation: true,
+			partition: "persist:main",
+			nodeIntegration: true
 		}
 	};
 	
@@ -66,22 +68,22 @@ function _createWindow(p){
 		_url = _cl_url();
 	}
 	
-	win = new BrowserWindow(__op);
-	win.setTitle('SUMR');
+	mWin = new BrowserWindow(__op);
+	mWin.setTitle('SUMR');
 	_ldCnt({ u:_url });
-	win.setMinimumSize(400, 500);
-	win.show()
+	mWin.setMinimumSize(400, 500);
+	mWin.show()
 	
   
-	win.on('closed', function(){
-        win = null;
+	mWin.on('closed', function(){
+        mWin = null;
     });
 
-	win.on('resize', () => {
-		let size = win.getSize();	
+	mWin.on('resize', () => {
+		let size = mWin.getSize();	
 		config.set('width', size[0]);
 		config.set('height', size[1]);
-		config.set('maximized', win.isMaximized());
+		config.set('maximized', mWin.isMaximized());
 	});
 
 }
@@ -90,24 +92,38 @@ function _ldCnt(p){
 	
 	if(!isN(p) && !isN(p.u) && __Onl()){
 		
-		config.set('url_last', p.u);
 		
-	    var webContents = win.webContents;
-	
+		
+	    var webContents = mWin.webContents;
+		
+		/*
 	    webContents.on('did-start-loading', function() {
-	        log.info('did-start-loading');
+	        log.info('did-start-loading:'+p.u);
 	    });
 	    
-	    webContents.on('did-stop-loading', function() {
-	        log.info('did-stop-loading');
-	    });
 	    
-	    webContents.on('did-finish-load', function() {
-	        log.info('did-finish-load');
+	    webContents.on('did-stop-loading', function(e, status, newUrl) {
+		    log.info(e);
+			log.info(status);
+	        log.info('did-stop-loading:'+p.u);
 	    });
-    
-		win.loadURL(p.u);
+	    */
+	    
+	    webContents.on('did-finish-load', function(e, status, newUrl) {
+	        log.info(status);
+	        log.info('did-finish-load:'+p.u);
+	        config.set('url_last', p.u);
+	    }); 
+		
+		_lurl = encodeURI(p.u);
+		
+		mWin.loadURL(_lurl);
+		mWin.show();
 	
+	}else{
+		
+		log.info('No u var or not online');
+		
 	}
 }
 
@@ -137,16 +153,15 @@ function _Rfrsh(p){
 			
 	}else{
 		
-		win.reload();
+		mWin.reload();
 		
 	}
 }
 	
 function _Cche_clr(){
-	/*event.sender.send('tray-removed')*/
+	/*event.sender.send('tray-removed')*/	
 	
-	
-	var ses = win.webContents.session;
+	var ses = mWin.webContents.session;
 	var vln = ses.getCacheSize(function(n){
 		var cCheSze = n;
 	});
@@ -169,7 +184,7 @@ function _gotoAcc(p){
 	
 	if(!isN(p)){		
 		
-		const ses = win.webContents.session
+		const ses = mWin.webContents.session
 		console.log(ses.getUserAgent())
   
 		_mreg='';
@@ -191,28 +206,28 @@ function _RszeOn(p){
 	_mx = config.get('maximized');
 	
 	if(!isN(_w) && !isN(_h)){
-		win.setSize(_w, _h);
+		mWin.setSize(_w, _h);
 	}else{
-		/*win.maximize();*/	
+		/*mWin.maximize();*/	
 	}
 	
 	if(_mx){
-		win.maximize();
+		mWin.maximize();
 	}
 	
 	if(!isN(p) && !isN(p.minH) && !isN(p.minW)){
 		
 		if(isN(_w) && isN(_h)){
 			
-			win.setSize(p.minW, p.minH);
+			mWin.setSize(p.minW, p.minH);
 			
 		}
 		
-		win.setMinimumSize(p.minW, p.minH);
+		mWin.setMinimumSize(p.minW, p.minH);
 	}
 	
-	win.center();
-	win.focus();
+	mWin.center();
+	mWin.focus();
 }
 
 function _dmn(){

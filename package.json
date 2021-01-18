@@ -1,70 +1,47 @@
 {
     "name": "SUMR",
     "version": "1.0.0",
-    "description": "",
+    "description": "SUMR App Desktop",
     "main": "main.js",
     "scripts": {
         "start": "electron main.js",
         "electron-toolkit": "electron ./node_modules/electron-toolkit",
-        "build-darwin": "electron-packager . electron-app --out=dist/ --platform=darwin --icon build/icon.icns --overwrite",
-        "build-mas": "electron-packager . electron-app --out=dist/ --platform=mas --icon build/icon.icns --overwrite",
-        "build-linux": "electron-packager . electron-app --out=dist/ --platform=linux --icon build/png/512x512.png --overwrite",
-        "build-win32": "electron-packager . electron-app --out=dist/ --platform=win32 --icon build/icon.ico --overwrite",
-        "build-win64": "electron-packager . electron-app --out=dist/ --platform=win32 --icon build/icon.ico --arch=x64 --version=0.34.1 --overwrite",
         "build": "npm run build-darwin && npm run build-win64 && npm run build-win32",
-        "sv-win": "electron-packager . electron-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=build/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=Electron Tutorial App"
+        "build-darwin": "electron-packager . SUMR --out=dist/ --prune=true --platform=darwin --icon build/icon.icns --overwrite",
+        "build-win32": "electron-packager . SUMR --out=dist/ --prune=true --platform=win32 --icon build/icon.ico --overwrite",
+        "build-win64": "electron-packager . SUMR --out=dist/ --prune=true --platform=win32 --icon build/icon.ico --arch=x64 --version=0.34.1 --overwrite",
+        "installer-mac": "electron-installer-dmg ./dist/SUMR-darwin-x64/SUMR.app name_of_the_installer --overwrite",
+        "installer-win": "electron-installer-windows --src dist/SUMR-win32-x64/ --dest dist/releases/",
+        "pack": "electron-forge start",
+        "make": "electron-forge make"
     },
     "author": "Servicios.in",
     "license": "ISC",
-    "build": {
-        "appId": "com.electron.SUMR",
-        "copyright": "Powered by 2018 Servicios.in",
-        "productName": "SUMR",
-        "electronVersion": "2.0.1",
-        "asar": true,
-        "directories": {
-            "app": "./",
-            "output": "dist"
-        },
-        "win": {
-            "target": [
-                {
-                    "target": "nsis",
-                    "arch": [
-                        "arch_all"
-                    ]
-                }
-            ]
-        },
-        "mac": {
-            "target": [
-                {
-                    "target": "dmg",
-                    "arch": [
-                        "x64"
-                    ]
-                }
-            ],
-            "category": "public.app-category.productivity"
-        },
-        "nsis": {
-			"oneClick": false
-		}
+    "config": {
+        "forge": "./forge.config.js"
     },
     "dependencies": {
-        "electron-config": "^1.0.0",
-        "electron-drag": "^1.2.0",
-        "electron-json-storage": "^4.1.0",
-        "electron-localshortcut": "^3.1.0",
-        "electron-log": "^2.2.14",
-        "electron-settings": "^3.1.4",
+        "electron-drag": "^2.0.0",
+        "electron-json-storage": "^4.3.0",
+        "electron-localshortcut": "^3.2.1",
+        "electron-log": "^4.3.1",
+        "electron-settings": "^4.0.2",
+        "electron-squirrel-startup": "^1.0.0",
+        "electron-store": "^6.0.1",
         "jquery": "^3.3.1",
-        "open": "0.0.5"
+        "open": "^7.3.0",
+        "update-electron-app": "^2.0.1"
     },
     "devDependencies": {
-        "electron": "^1.8.6",
-        "electron-builder": "^20.10.0",
-        "electron-packager": "^12.0.1",
-        "electron-toolkit": "^1.0.24"
+        "@electron-forge/cli": "^6.0.0-beta.54",
+        "@electron-forge/maker-deb": "^6.0.0-beta.54",
+        "@electron-forge/maker-dmg": "^6.0.0-beta.54",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+        "@electron-forge/maker-zip": "^6.0.0-beta.54",
+        "electron": "^11.1.1",
+        "electron-builder": "^22.9.1",
+        "electron-packager": "^15.2.0",
+        "electron-prebuilt-compile": "8.2.0"
     }
 }
