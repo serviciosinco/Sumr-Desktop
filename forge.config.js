@@ -1,5 +1,6 @@
 module.exports = {
     packagerConfig: {
+      dir: './dist/',
       icon: './build/osx/icon.icns'
     },
     makers: [
