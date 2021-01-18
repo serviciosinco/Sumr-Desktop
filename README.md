@@ -1,8 +1,8 @@
 <img src="https://www.sumr.co/static/media/logo.70735e5b.svg" width="200" style="margin-bottom:50px;">
 
-[![CircleCI Build Status](https://circleci.com/gh/electron/electron/tree/master.svg?style=shield)](https://circleci.com/gh/electron/electron/tree/master)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/4lggi9dpjc1qob7k/branch/master?svg=true)](https://ci.appveyor.com/project/electron-bot/electron-ljo26/branch/master)
-[![devDependency Status](https://david-dm.org/electron/electron/dev-status.svg)](https://david-dm.org/electron/electron?type=dev)
+[![Issues](https://img.shields.io/github/issues/serviciosinco/SUMR-DESKTOP?style=flat-square&logo=appveyor)]()
+[![Forks](https://img.shields.io/github/forks/serviciosinco/SUMR-DESKTOP?style=flat-square&logo=appveyor)]()
+[![Stars](https://img.shields.io/github/stars/serviciosinco/SUMR-DESKTOP?style=flat-square&logo=appveyor)]()
 
 Available Translations:  🇪🇸 🇬🇧.
 #
