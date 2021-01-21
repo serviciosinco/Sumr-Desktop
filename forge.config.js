@@ -13,6 +13,13 @@ module.exports = {
             // Config here
         }
       },*/
+
+      {
+        name: '@electron-forge/maker-squirrel',
+        config: {
+          name: 'SUMR'
+        }
+      },
       {
         name: '@electron-forge/maker-dmg',
         config: {
