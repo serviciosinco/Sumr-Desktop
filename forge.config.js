@@ -1,11 +1,12 @@
 const path = require('path');
 const fs = require('fs');
-const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
+//const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
 
 module.exports = {
     packagerConfig: {
       icon: './build/osx/icon.icns',
-      prune: true
+      prune: true,
+      junk: true
     },
     makers: [
       {
@@ -62,25 +63,42 @@ module.exports = {
       }
     ],
     hooks: {
+
       postPackage: async (forgeConfig, options) => {
-        if (options.spinner) {
+
+        if(options.spinner){
           options.spinner.info(`Completed packaging for ${options.platform} / ${options.arch} at ${options.outputPaths[0]}`);
         }
+        
+        if(options.platform && options.platform == 'darwin'){
+          if(fs.existsSync('./dist/SUMR.dmg')){ fs.rmdirSync('./dist/SUMR.dmg', { recursive:true }); }
+        }
+
+        if(options.platform  && options.platform == 'win32'){
+          if(fs.existsSync('./dist/SUMR_x64.exe')){ fs.rmdirSync('./dist/SUMR_x64.exe', { recursive:true }); }
+        }
+
       },
+
       postMake: async(forgeConfig, options) => {
-                
+
         if(fs.existsSync('./out/make/SUMR-1.0.0.dmg')){
           fs.rename('./out/make/SUMR-1.0.0.dmg', './dist/SUMR.dmg', (e)=>{
-              console.log(e);
+              if(!e){ 
+                console.info('Success');
+              }else{
+                console.log(e);
+              }
           });
         }else{
-          console.log('Not exists dmg');
+          console.log('Not exists .dmg');
         }
+
 
         if(fs.existsSync('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe')){
           fs.rename('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe', './dist/SUMR_x64.exe', (e)=>{
               if(!e){
-                  fs.rmdirSync('./out/make/', { recursive:true });
+                  if(!e){ console.info('Success'); }
               }else{
                   console.log(e);
               }
@@ -92,5 +110,11 @@ module.exports = {
         fs.rmdirSync('./out/', { recursive:true });
 
       }
-    }
+
+    },
+
+    /*plugins: [
+      ['@electron-forge/plugin-auto-unpack-natives']
+    ]*/
+
   }
