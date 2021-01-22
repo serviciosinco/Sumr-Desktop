@@ -5,9 +5,7 @@
     "main": "./src/main.js",
     "scripts": {
         "start": "electron ./src/main.js",
-        "make:clear": "rm -rf ./out/SUMR-darwin-x64 && rm -rf ./out/make",
-        "make:organize": "mv ./out/make/SUMR-1.0.0.dmg ./out/SUMR.dmg && npm run make:clear",
-        "make": "npm prune && electron-forge make && npm run make:organize"
+        "make": "npm prune && electron-forge make"
     },
     "author": "Servicios.in",
     "license": "ISC",

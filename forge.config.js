@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
 
 module.exports = {
@@ -6,13 +7,15 @@ module.exports = {
       icon: './build/osx/icon.icns'
     },
     makers: [
-      /*{
-        name: '@electron-forge/maker-zip',
-        platforms: ['darwin', 'linux'],
+      {
+        name: '@electron-forge/maker-squirrel',
         config: {
-            // Config here
+          name: 'SUMR',
+          setupIcon: './build/osx/icon.ico',
+          //iconUrl: './build/osx/icon.ico',
+          //loadingGif: './build/osx/icon.gif'
         }
-      },*/
+      },
       {
         name: '@electron-forge/maker-dmg',
         config: {
@@ -62,6 +65,32 @@ module.exports = {
         if (options.spinner) {
           options.spinner.info(`Completed packaging for ${options.platform} / ${options.arch} at ${options.outputPaths[0]}`);
         }
+      },
+      postMake: async(forgeConfig, options) => {
+                
+        if(fs.existsSync('./out/make/SUMR-1.0.0.dmg')){
+          fs.rename('./out/make/SUMR-1.0.0.dmg', './out/SUMR.dmg', (e)=>{
+              console.log(e);
+          });
+        }else{
+          console.log('Not exists dmg');
+        }
+
+        if(fs.existsSync('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe')){
+          fs.rename('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe', './out/SUMR_x64.exe', (e)=>{
+              if(!e){
+                  fs.rmdirSync('./out/make/', { recursive:true });
+                  fs.rmdirSync('./out/SUMR-win32-x64/', { recursive:true });
+              }else{
+                  console.log(e);
+              }
+          });
+        }else{
+          console.log('Not exists .exe');
+        }
+
+
+
       }
     }
   }
