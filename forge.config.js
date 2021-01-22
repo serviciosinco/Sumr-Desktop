@@ -4,7 +4,8 @@ const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
 
 module.exports = {
     packagerConfig: {
-      icon: './build/osx/icon.icns'
+      icon: './build/osx/icon.icns',
+      prune: true
     },
     makers: [
       {
