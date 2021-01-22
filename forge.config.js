@@ -46,9 +46,9 @@ module.exports = {
       overwrite:true,
       ignore:[
         'dist/',
-        //'assets/',
+        'assets/',
         'build/',
-        //'forge.config.js',
+        'forge.config.js',
         '.nvmrc',
         '.gitignore',
         //'package.json',
