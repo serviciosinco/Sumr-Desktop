@@ -34,7 +34,11 @@ const ShortCuts = ()=>{
 
 _eGet.on('_rSze', function(e, a) {   
 	
-	RszeOn({ minH:800, minW:1200 }); 
+	if(process.platform == 'darwin'){
+		RszeOn({ minH:800, minW:1200 }); 
+	}else{
+		RszeOn({ minH:500, minW:800 });
+	}
 	
 	_ses.clients = config.get('clients'); 
 	_ses.user = config.get('user');

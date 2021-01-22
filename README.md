@@ -17,6 +17,12 @@ announcements.
 
 ## Installation
 
+To install electron globally
+```sh
+npm install -g electron
+```
+
+
 To install dev dependencies
 
 ```sh
