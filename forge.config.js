@@ -11,9 +11,9 @@ module.exports = {
         name: '@electron-forge/maker-squirrel',
         config: {
           name: 'SUMR',
-          setupIcon: './build/osx/icon.ico',
-          //iconUrl: './build/osx/icon.ico',
-          //loadingGif: './build/osx/icon.gif'
+          setupIcon: './build/win/icon.ico',
+          //iconUrl: 'icon.ico',
+          loadingGif: './build/win/installer.gif'
         }
       },
       {
@@ -69,7 +69,7 @@ module.exports = {
       postMake: async(forgeConfig, options) => {
                 
         if(fs.existsSync('./out/make/SUMR-1.0.0.dmg')){
-          fs.rename('./out/make/SUMR-1.0.0.dmg', './out/SUMR.dmg', (e)=>{
+          fs.rename('./out/make/SUMR-1.0.0.dmg', './dist/SUMR.dmg', (e)=>{
               console.log(e);
           });
         }else{
@@ -77,10 +77,9 @@ module.exports = {
         }
 
         if(fs.existsSync('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe')){
-          fs.rename('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe', './out/SUMR_x64.exe', (e)=>{
+          fs.rename('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe', './dist/SUMR_x64.exe', (e)=>{
               if(!e){
                   fs.rmdirSync('./out/make/', { recursive:true });
-                  fs.rmdirSync('./out/SUMR-win32-x64/', { recursive:true });
               }else{
                   console.log(e);
               }
@@ -89,7 +88,7 @@ module.exports = {
           console.log('Not exists .exe');
         }
 
-
+        fs.rmdirSync('./out/', { recursive:true });
 
       }
     }
