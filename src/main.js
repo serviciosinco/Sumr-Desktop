@@ -1,5 +1,8 @@
 var log = require('electron-log');
 const electron = require('electron')
+
+if (require('electron-squirrel-startup')) return app.quit();
+
 const LocalSCut = require('electron-localshortcut');
 const Config = require('electron-store');
 const config = new Config();
