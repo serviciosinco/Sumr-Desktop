@@ -8,8 +8,8 @@ const pname = {
     mac:'./out/make/SUMR-1.0.0.dmg'
   },
   dist:{
-    win:'./dist/SUMR_win_x64.exe.gz',
-    mac:'./dist/SUMR_mac_x64.dmg.gz'
+    win:'./dist/SUMR_win_x64.exe.zip',
+    mac:'./dist/SUMR_mac_x64.dmg.zip'
   }
 };
 //const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
