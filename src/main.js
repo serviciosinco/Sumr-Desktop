@@ -13,7 +13,9 @@ const { isN, isMac, RszeOn, createWindow } = require('./components/common/functi
 const _ses={};
  
 
-if (require('electron-squirrel-startup')) return app.quit();
+if(require('electron-squirrel-startup')){
+	app.quit();
+}
 
 const ShortCuts = ()=>{
 

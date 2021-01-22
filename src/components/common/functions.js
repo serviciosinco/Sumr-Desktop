@@ -5,12 +5,14 @@ const config = new Config();
 const { GetGlobal } = require('./globals');
 const _ses={};
 
-
+mWin = null;
 var log = require('electron-log');
 
 const isOnline = ()=>{
 	
-	var _o = mWin.webContents.send('_r_onl');
+	if(mWin){
+		var _o = mWin.webContents.send('_r_onl');
+	}
 	
 	if(_o != false){
 		return true;
@@ -29,6 +31,7 @@ const createWindow = (p)=>{
 	
 	_ses.subdomain = config.get('subdomain');
 	
+	var _mreg='',_url='';
 	var __op={ 
 		title:'SUMR',
 		width:400, 
@@ -49,7 +52,7 @@ const createWindow = (p)=>{
 		__op['frame']=false	
 	}
 	
-	_mreg='';
+	
 	
 	if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 	
@@ -64,6 +67,7 @@ const createWindow = (p)=>{
 	}
 	
 	mWin = new BrowserWindow(__op);
+
 	mWin.setTitle('SUMR');
 	LoadContent({ u:_url });
 	mWin.setMinimumSize(400, 500);
@@ -226,6 +230,9 @@ const RszeOn = (p)=>{
 }
 
 const GetDomain = ()=>{
+
+	var dmn = '';
+
 	if(config.get('menu_dvlp_test')=='ok'){
 		dmn = GetGlobal('domain_tester');
 	}else{

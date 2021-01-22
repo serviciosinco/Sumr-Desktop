@@ -4,6 +4,7 @@
     "description": "SUMR App Desktop",
     "main": "./src/main.js",
     "scripts": {
+        "start:dev": "rm -rf node_modules && npm i",
         "start": "electron ./src/main.js",
         "make": "electron-forge make --production"
     },
@@ -29,12 +30,11 @@
         "@electron-forge/maker-zip": "^6.0.0-beta.54",
         "@electron-forge/plugin-auto-unpack-natives": "^6.0.0-beta.54",
         "electron": "^11.2.0",
+        "electron-packager": "^15.2.0",
+        "electron-settings": "^4.0.2",
+        "electron-json-storage": "^4.3.0",
         "electron-builder": "^22.9.1",
         "electron-drag": "^2.0.0",
-        "electron-json-storage": "^4.3.0",
-        "electron-packager": "^15.2.0",
-        "electron-prebuilt-compile": "8.2.0",
-        "electron-settings": "^4.0.2",
         "update-electron-app": "^2.0.1"
     }
 }

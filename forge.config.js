@@ -22,7 +22,7 @@ const DoZip = async (source, target)=>{
         
       var read = fs.createReadStream(source);
       var write = fs.createWriteStream(target);
-      var stream = read.pipe(zip).pipe(write);	
+      var stream = read.pipe(zip).pipe(write);
 
       stream.on("error", (err) => {
           reject(err);
