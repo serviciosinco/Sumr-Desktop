@@ -1,12 +1,59 @@
 const path = require('path');
 const fs = require('fs');
+const zlib = require('zlib');
+const zip = zlib.createGzip();
+const pname = {
+  path:{
+    win:'./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe',
+    mac:'./out/make/SUMR-1.0.0.dmg'
+  },
+  dist:{
+    win:'./dist/SUMR_win_x64.exe.gz',
+    mac:'./dist/SUMR_mac_x64.dmg.gz'
+  }
+};
 //const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
+
+const DoZip = async (source, target)=>{
+
+  if(source && target){
+
+    await new Promise((resolve, reject) => {
+        
+      var read = fs.createReadStream(source);
+      var write = fs.createWriteStream(target);
+      var stream = read.pipe(zip).pipe(write);	
+
+      stream.on("error", (err) => {
+          reject(err);
+      });
+
+      stream.on('finish', ()=>{
+        resolve();
+      });
+
+    });
+
+  }
+  
+}
 
 module.exports = {
     packagerConfig: {
       icon: './build/osx/icon.icns',
       prune: true,
-      junk: true
+      junk: true,
+      overwrite:true,
+      ignore:[
+        'dist/',
+        //'assets/',
+        'build/',
+        //'forge.config.js',
+        '.nvmrc',
+        '.gitignore',
+        //'package.json',
+        'README.md'
+      ]
     },
     makers: [
       {
@@ -71,43 +118,34 @@ module.exports = {
         }
         
         if(options.platform && options.platform == 'darwin'){
-          if(fs.existsSync('./dist/SUMR.dmg')){ fs.rmdirSync('./dist/SUMR.dmg', { recursive:true }); }
+          if(fs.existsSync(pname.dist.mac)){ fs.rmdirSync(pname.dist.mac, { recursive:true }); }
         }
 
         if(options.platform  && options.platform == 'win32'){
-          if(fs.existsSync('./dist/SUMR_x64.exe')){ fs.rmdirSync('./dist/SUMR_x64.exe', { recursive:true }); }
+          if(fs.existsSync(pname.dist.win)){ fs.rmdirSync(pname.dist.win, { recursive:true }); }
         }
 
       },
 
       postMake: async(forgeConfig, options) => {
 
-        if(fs.existsSync('./out/make/SUMR-1.0.0.dmg')){
-          fs.rename('./out/make/SUMR-1.0.0.dmg', './dist/SUMR.dmg', (e)=>{
-              if(!e){ 
-                console.info('Success');
-              }else{
-                console.log(e);
-              }
+        if(fs.existsSync(pname.path.mac)){
+          DoZip(pname.path.mac, pname.dist.mac)
+          .then( ()=> { 
+            if(fs.existsSync(pname.dist.mac)){ 
+              fs.rmdirSync('./out/', { recursive:true }); 
+            }
           });
-        }else{
-          console.log('Not exists .dmg');
         }
 
-
-        if(fs.existsSync('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe')){
-          fs.rename('./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe', './dist/SUMR_x64.exe', (e)=>{
-              if(!e){
-                  if(!e){ console.info('Success'); }
-              }else{
-                  console.log(e);
-              }
+        if(fs.existsSync(pname.path.win)){
+          DoZip(pname.path.win, pname.dist.win)
+          .then( ()=> { 
+            if(fs.existsSync(pname.dist.win)){ 
+              fs.rmdirSync('./out/', { recursive:true }); 
+            }
           });
-        }else{
-          console.log('Not exists .exe');
         }
-
-        fs.rmdirSync('./out/', { recursive:true });
 
       }
 
