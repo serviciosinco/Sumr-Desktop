@@ -68,6 +68,11 @@ const createWindow = (p)=>{
 	mWin.setTitle('SUMR');
 	LoadContent({ u:_url });
 	mWin.setMinimumSize(400, 500);
+
+	if(!isMac()){
+		mWin.setAutoHideMenuBar(true);
+	}
+
 	//mWin.show();
 	
   
