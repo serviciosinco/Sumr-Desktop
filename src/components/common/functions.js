@@ -59,7 +59,7 @@ const createWindow_opt = (prev)=>{
 	};
 
 	if(prev){ data.show = true; }
-	if(!isMac()){ data.frame=true; }
+	if(!isMac() && !prev){ data.frame=true; }
 	return data;
 
 }
