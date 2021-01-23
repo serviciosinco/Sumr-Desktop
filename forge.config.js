@@ -3,13 +3,14 @@ const fs = require('fs');
 const zlib = require('zlib');
 const zip = zlib.createGzip();
 const pname = {
+  assets:'./out/make/assets/',
   path:{
     win:'./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe',
     mac:'./out/make/SUMR-1.0.0.dmg'
   },
   dist:{
-    win:'./dist/SUMR_win_x64.exe.zip',
-    mac:'./dist/SUMR_mac_x64.dmg.zip'
+    win:'./out/SUMR_win_x64.exe.zip',
+    mac:'./out/SUMR_mac_x64.dmg.zip'
   }
 };
 //const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
@@ -24,7 +25,7 @@ const DoZip = async (source, target)=>{
       var write = fs.createWriteStream(target);
       var stream = read.pipe(zip).pipe(write);
 
-      stream.on("error", (err) => {
+      stream.on('error', (err) => {
           reject(err);
       });
 
@@ -40,18 +41,16 @@ const DoZip = async (source, target)=>{
 
 module.exports = {
     packagerConfig: {
-      icon: './build/osx/icon.icns',
+      icon: `${pname.assets}icon.icns`,
       prune: true,
       junk: true,
       overwrite:true,
       ignore:[
-        'dist/',
         'assets/',
-        'build/',
+        'build/', 
         'forge.config.js',
         '.nvmrc',
         '.gitignore',
-        //'package.json',
         'README.md'
       ]
     },
@@ -60,16 +59,16 @@ module.exports = {
         name: '@electron-forge/maker-squirrel',
         config: {
           name: 'SUMR',
-          setupIcon: './build/win/icon.ico',
+          setupIcon: `${pname.assets}icon.ico`,
           //iconUrl: 'icon.ico',
-          loadingGif: './build/win/installer.gif'
+          loadingGif: `${pname.assets}installer.gif`
         }
       },
       {
         name: '@electron-forge/maker-dmg',
         config: {
-          icon: './build/osx/icon.icns',
-          background: './build/osx/background.png',
+          icon: `${pname.assets}icon.icns`,
+          background: `${pname.assets}background.png`,
           format: 'ULFO',
           additionalDMGOptions: {
             'background-color': '#1a1a1a',
@@ -111,6 +110,25 @@ module.exports = {
     ],
     hooks: {
 
+      generateAssets: async () => {
+
+        if (!fs.existsSync( pname.assets )) {
+          fs.mkdirSync( pname.assets , {
+            recursive: true
+          });
+        }
+
+        if(process.platform == 'darwin'){
+          fs.copyFile('./build/osx/icon.icns', `${pname.assets}icon.icns`, (err)=>{});
+          fs.copyFile('./build/osx/background.png', `${pname.assets}background.png`, (err)=>{});
+        }
+
+        if(process.platform == 'win32'){
+          fs.copyFile('./build/win/icon.ico', `${pname.assets}icon.ico`, (err)=>{});
+          fs.copyFile('./build/win/installer.gif', `${pname.assets}installer.gif`, (err)=>{});
+        }
+
+      },
       postPackage: async (forgeConfig, options) => {
 
         if(options.spinner){
@@ -118,7 +136,9 @@ module.exports = {
         }
         
         if(options.platform && options.platform == 'darwin'){
-          if(fs.existsSync(pname.dist.mac)){ fs.rmdirSync(pname.dist.mac, { recursive:true }); }
+          if(fs.existsSync(pname.dist.mac)){ 
+            fs.rmdirSync(pname.dist.mac, { recursive:true });
+          }
         }
 
         if(options.platform  && options.platform == 'win32'){
@@ -133,7 +153,8 @@ module.exports = {
           DoZip(pname.path.mac, pname.dist.mac)
           .then( ()=> { 
             if(fs.existsSync(pname.dist.mac)){ 
-              fs.rmdirSync('./out/', { recursive:true }); 
+             fs.rmdirSync('./out/make/', { recursive:true }); 
+             fs.rmdirSync('./out/SUMR-darwin-x64/', { recursive:true }); 
             }
           });
         }
@@ -142,7 +163,7 @@ module.exports = {
           DoZip(pname.path.win, pname.dist.win)
           .then( ()=> { 
             if(fs.existsSync(pname.dist.win)){ 
-              fs.rmdirSync('./out/', { recursive:true }); 
+              fs.rmdirSync('./out/make/', { recursive:true }); 
             }
           });
         }
