@@ -174,7 +174,8 @@ module.exports = {
           DoZip(pname.path.win, pname.dist.win)
           .then( ()=> { 
             if(fs.existsSync(pname.dist.win)){ 
-              fs.rmdirSync(`./out/${envVersion}/make/`, { recursive:true }); 
+              fs.rmdirSync(`./out/${envVersion}/make/`, { recursive:true });
+              fs.rmdirSync(`./out/${envVersion}/SUMR-win32-x64/`, { recursive:true }); 
             }
           });
         }
