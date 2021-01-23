@@ -47,6 +47,10 @@ const createWindow = (p)=>{
 		}
 	};
 	
+	if(isMac()){
+		__op.frame=true;
+	}
+
 	if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 	
 	if(!isN(_ses.subdomain) || (!isN(p) && !isN(p.main) && p.main == 'ok')){

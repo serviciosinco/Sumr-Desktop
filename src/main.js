@@ -27,7 +27,8 @@ const ShortCuts = ()=>{
         	config.set('menu_dvlp', 'ok'); 
         }
 		                
-        setBar();
+		setBar();
+		
     });	
 
 }
