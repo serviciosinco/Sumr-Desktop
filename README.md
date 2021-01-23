@@ -17,6 +17,7 @@ announcements.
 
 ## Installation
 
+
 To install electron globally
 ```sh
 npm install -g electron
@@ -41,3 +42,8 @@ To package and build installers ( MacOsx / Windows )
 ```sh
 npm run make
 ```
+
+
+## Upload Distribution
+#
+The process is manually, the 'make' script creates a .dmg or .exe file into the 'dist/' folder that has to be upload to S3 bucket of SUMR.co.
