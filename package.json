@@ -5,7 +5,7 @@
     "main": "./src/main.js",
     "scripts": {
         "start:dev": "rm -rf node_modules && npm i",
-        "start": "APP_DEV=true electron ./src/main.js",
+        "start": "SET APP_DEV=true && electron ./src/main.js",
         "make": "electron-forge make --production"
     },
     "author": "Servicios.in",
