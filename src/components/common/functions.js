@@ -47,7 +47,7 @@ const createWindow = (p)=>{
 		}
 	};
 	
-	if(isMac()){
+	if(!isMac()){
 		__op.frame=true;
 	}
 
