@@ -37,6 +37,7 @@ const createWindow = (p)=>{
 		width:400, 
 		height:500, 
 		show:false,
+		frame:false,
 		titleBarStyle:'hidden',
 		backgroundColor: '#23243D',
 		webPreferences: {
@@ -45,14 +46,6 @@ const createWindow = (p)=>{
 			nodeIntegration: true
 		}
 	};
-	
-	if(isMac()){
-		__op['frame']=false	
-	}else{
-		__op['frame']=false	
-	}
-	
-	
 	
 	if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 	
@@ -71,7 +64,7 @@ const createWindow = (p)=>{
 	mWin.setTitle('SUMR');
 	LoadContent({ u:_url });
 	mWin.setMinimumSize(400, 500);
-	mWin.show()
+	//mWin.show();
 	
   
 	mWin.on('closed', function(){
@@ -114,10 +107,14 @@ const LoadContent = (p)=>{
 	        config.set('url_last', p.u);
 	    }); 
 		
+		webContents.on('ready-to-show', () => {
+			mWin.show()  
+		});
+
 		_lurl = encodeURI(p.u);
 		
 		mWin.loadURL(_lurl);
-		mWin.show();
+		//mWin.show();
 	
 	}else{
 		

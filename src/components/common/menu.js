@@ -18,7 +18,6 @@ let i_dvlp = nativeImage.createFromPath( GetGlobal('main_icon_dvlp_refresh') )
 
 const setBar = (p)=>{
 	
-	
 	var m = [];
 	
 	m[0] = { 
