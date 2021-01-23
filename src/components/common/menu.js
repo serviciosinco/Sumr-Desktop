@@ -4,7 +4,7 @@ const config = new Config();
 let appIcon = null
 
 const electron = require('electron')
-const {app, Menu, globalShortcut} = electron
+const {app, Menu } = electron
 const path = require('path')
 const Tray = electron.Tray
 const open = require('open');

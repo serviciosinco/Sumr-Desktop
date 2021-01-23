@@ -1,5 +1,5 @@
 const electron = require('electron')
-const {app, BrowserWindow, globalShortcut} = electron
+const { BrowserWindow } = electron
 const Config = require('electron-store');
 const config = new Config();
 const { GetGlobal } = require('./globals');
@@ -7,12 +7,14 @@ const _ses={};
 mWin = null;
 
 const isDev = ()=>{
-	var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
+	var isDev = process.env.APP_DEV ? true : false;
 	return isDev;
 }
 
 if(isDev()){
-	const log = require('electron-log');
+	var log = require('electron-log');
+}else{
+	var log = null;
 }
 
 
@@ -62,10 +64,8 @@ const createWindow = (p)=>{
 	if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 	
 	if(!isN(_ses.subdomain) || (!isN(p) && !isN(p.main) && p.main == 'ok')){
-		
 		config.set('menu_main_clients', 'ok');
 		_url = 'https://'+_ses.subdomain+'.'+GetDomain()+'/?_dsktp=ok&__r='+Math.random()+_mreg;
-		
 	}else{
 		config.set('menu_main_clients', 'no');
 		_url = GoToAccounts();
@@ -103,8 +103,8 @@ const LoadContent = (p)=>{
 	    var webContents = mWin.webContents;
 	    
 	    webContents.on('did-finish-load', function(e, status, newUrl) {
-	        Log(status);
-	        Log('did-finish-load:'+p.u);
+	        LogShow(status);
+	        LogShow('did-finish-load:'+p.u);
 	        config.set('url_last', p.u);
 	    }); 
 		
@@ -119,7 +119,7 @@ const LoadContent = (p)=>{
 	
 	}else{
 		
-		Log('No u var or not online');
+		LogShow('No u var or not online');
 		
 	}
 }
@@ -245,8 +245,8 @@ const GoToAccounts = ()=>{
 	return _u;	
 }
 
-const Log = (t)=>{
-	if(isDev()){
+const LogShow = (t)=>{
+	if(isDev() && !isN(log)){
 		log.info(t);
 	}
 }
@@ -261,5 +261,5 @@ module.exports = {
 	gotoAcc,
 	RszeOn,
 	GoToAccounts,
-	Log
+	LogShow
 };

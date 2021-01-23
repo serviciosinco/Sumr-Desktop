@@ -8,7 +8,7 @@ const _eSnd = electron.ipcRenderer;
 const path = require('path');
 const url = require('url');
 const { setBar, barIcn } = require('./components/common/menu');
-const { isN, isMac, RszeOn, createWindow, Log } = require('./components/common/functions');
+const { isN, isMac, RszeOn, createWindow, LogShow } = require('./components/common/functions');
 const _ses={};
  
 
@@ -61,7 +61,7 @@ _eGet.on('_rSze', function(e, a) {
 });
 
 _eGet.on('_m_set', function(e, a) { 
-	Log(a.g+' -> '+a.v);  
+	LogShow(a.g+' -> '+a.v);  
 	config.set(a.g, a.v);
 });
 
