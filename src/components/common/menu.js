@@ -1,9 +1,7 @@
 const nativeImage = require('electron').nativeImage
 const Config = require('electron-store');
 const config = new Config();
-
 let appIcon = null
-var log = require('electron-log');
 
 const electron = require('electron')
 const {app, Menu, globalShortcut} = electron
