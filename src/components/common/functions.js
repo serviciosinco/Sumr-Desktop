@@ -1,6 +1,7 @@
 const electron = require('electron')
 const { BrowserWindow } = electron
 const Config = require('electron-store');
+const isDev = require('electron-is-dev');
 const config = new Config();
 const { GetGlobal } = require('./globals');
 const _ses={};
@@ -8,12 +9,11 @@ const _ses={};
 MWin_Prev = null;
 MWin_App = null;
 
-const isDev = ()=>{
-	var isDev = process.env.APP_DEV ? true : false;
+const isDev_f = ()=>{
 	return isDev;
 }
 
-if(isDev()){
+if(isDev_f()){
 	var log = require('electron-log');
 }else{
 	var log = null;
@@ -270,7 +270,7 @@ const GoToAccounts = ()=>{
 }
 
 const LogShow = (t)=>{
-	if(isDev() && !isN(log)){
+	if(isDev_f() && !isN(log)){
 		log.info(t);
 	}
 }
