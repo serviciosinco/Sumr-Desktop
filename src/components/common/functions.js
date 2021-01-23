@@ -4,9 +4,17 @@ const Config = require('electron-store');
 const config = new Config();
 const { GetGlobal } = require('./globals');
 const _ses={};
-
 mWin = null;
-var log = require('electron-log');
+
+const isDev = ()=>{
+	var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
+	return isDev;
+}
+
+if(isDev()){
+	const log = require('electron-log');
+}
+
 
 const isOnline = ()=>{
 	
@@ -93,26 +101,11 @@ const LoadContent = (p)=>{
 	
 	if(!isN(p) && !isN(p.u) && isOnline()){
 		
-		
-		
 	    var webContents = mWin.webContents;
-		
-		/*
-	    webContents.on('did-start-loading', function() {
-	        log.info('did-start-loading:'+p.u);
-	    });
-	    
-	    
-	    webContents.on('did-stop-loading', function(e, status, newUrl) {
-		    log.info(e);
-			log.info(status);
-	        log.info('did-stop-loading:'+p.u);
-	    });
-	    */
 	    
 	    webContents.on('did-finish-load', function(e, status, newUrl) {
-	        log.info(status);
-	        log.info('did-finish-load:'+p.u);
+	        Log(status);
+	        Log('did-finish-load:'+p.u);
 	        config.set('url_last', p.u);
 	    }); 
 		
@@ -127,7 +120,7 @@ const LoadContent = (p)=>{
 	
 	}else{
 		
-		log.info('No u var or not online');
+		Log('No u var or not online');
 		
 	}
 }
@@ -253,6 +246,12 @@ const GoToAccounts = ()=>{
 	return _u;	
 }
 
+const Log = (t)=>{
+	if(!isDev()){
+		log.info(t);
+	}
+}
+
 module.exports = {
     createWindow,
 	LoadContent,
@@ -262,5 +261,6 @@ module.exports = {
 	ClearCache,
 	gotoAcc,
 	RszeOn,
-	GoToAccounts
+	GoToAccounts,
+	Log
 };

@@ -1,4 +1,3 @@
-var log = require('electron-log');
 const electron = require('electron')
 const LocalSCut = require('electron-localshortcut');
 const Config = require('electron-store');
@@ -9,7 +8,7 @@ const _eSnd = electron.ipcRenderer;
 const path = require('path');
 const url = require('url');
 const { setBar, barIcn } = require('./components/common/menu');
-const { isN, isMac, RszeOn, createWindow } = require('./components/common/functions');
+const { isN, isMac, RszeOn, createWindow, Log } = require('./components/common/functions');
 const _ses={};
  
 
@@ -61,11 +60,8 @@ _eGet.on('_rSze', function(e, a) {
 
 });
 
-
-
-
 _eGet.on('_m_set', function(e, a) { 
-	log.info(a.g+' -> '+a.v);  
+	Log(a.g+' -> '+a.v);  
 	config.set(a.g, a.v);
 });
 
