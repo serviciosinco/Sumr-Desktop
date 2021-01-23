@@ -4,7 +4,9 @@ const Config = require('electron-store');
 const config = new Config();
 const { GetGlobal } = require('./globals');
 const _ses={};
-mWin = null;
+
+MWin_Prev = null;
+MWin_App = null;
 
 const isDev = ()=>{
 	var isDev = process.env.APP_DEV ? true : false;
@@ -20,8 +22,8 @@ if(isDev()){
 
 const isOnline = ()=>{
 	
-	if(mWin){
-		var _o = mWin.webContents.send('_r_onl');
+	if(MWin_App){
+		var _o = MWin_App.webContents.send('_r_onl');
 	}
 	
 	if(_o != false){
@@ -37,17 +39,14 @@ const isMac = ()=>{
 	if(process.platform == 'darwin'){ return true; }else{ return false; }
 }
 
-const createWindow = (p)=>{	
-	
-	_ses.subdomain = config.get('subdomain');
-	
-	var _mreg='',_url='';
-	var __op={ 
+const createWindow_opt = (prev)=>{
+
+	let data  = { 
 		title:'SUMR',
 		width:400, 
-		height:500, 
-		show:false,
+		height:500,
 		frame:false,
+		show:false,
 		titleBarStyle:'hidden',
 		backgroundColor: '#23243D',
 		webPreferences: {
@@ -56,10 +55,18 @@ const createWindow = (p)=>{
 			nodeIntegration: true
 		}
 	};
+
+	if(prev){ data.show = true; }
+	if(!isMac()){ data.frame=true; }
+	return data;
+
+}
+
+const createWindow = (p)=>{	
 	
-	if(!isMac()){
-		__op.frame=true;
-	}
+	_ses.subdomain = config.get('subdomain');
+	
+	var _mreg = '', _url='', __op_prev = createWindow_opt(true), __op = createWindow_opt();
 
 	if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 	
@@ -71,27 +78,30 @@ const createWindow = (p)=>{
 		_url = GoToAccounts();
 	}
 	
-	mWin = new BrowserWindow(__op);
+	MWin_App = new BrowserWindow(__op);
+	MWin_Prev = new BrowserWindow(__op_prev);
 
-	mWin.setTitle('SUMR');
+	MWin_Prev.loadFile('index.html');
+
+	MWin_App.setTitle('SUMR');
 	LoadContent({ u:_url });
-	mWin.setMinimumSize(400, 500);
+	MWin_App.setMinimumSize(400, 500);
 
 	if(!isMac()){
-		mWin.setAutoHideMenuBar(true);
+		MWin_App.setAutoHideMenuBar(true);
 	}
 
-	mWin.show();
+	//MWin_App.show();
   
-	mWin.on('closed', function(){
-        mWin = null;
+	MWin_App.on('closed', function(){
+        MWin_App = null;
     });
 
-	mWin.on('resize', () => {
-		let size = mWin.getSize();	
+	MWin_App.on('resize', () => {
+		let size = MWin_App.getSize();	
 		config.set('width', size[0]);
 		config.set('height', size[1]);
-		config.set('maximized', mWin.isMaximized());
+		config.set('maximized', MWin_App.isMaximized());
 	});
 
 }
@@ -100,22 +110,26 @@ const LoadContent = (p)=>{
 	
 	if(!isN(p) && !isN(p.u) && isOnline()){
 		
-	    var webContents = mWin.webContents;
+	    var webContents = MWin_App.webContents;
 	    
 	    webContents.on('did-finish-load', function(e, status, newUrl) {
 	        LogShow(status);
 	        LogShow('did-finish-load:'+p.u);
-	        config.set('url_last', p.u);
+			config.set('url_last', p.u);
+			
+			RszeOn({ start:true, prev:true }); 
+
+			setTimeout(()=>{
+				MWin_Prev.close();
+				MWin_App.show();
+			}, 100);
+			
 	    }); 
-		
-		webContents.on('ready-to-show', () => {
-			mWin.show()  
-		});
 
 		_lurl = encodeURI(p.u);
 		
-		mWin.loadURL(_lurl);
-		mWin.show();
+		MWin_App.loadURL(_lurl);
+		//MWin_App.show();
 	
 	}else{
 		
@@ -150,7 +164,7 @@ const Refresh = (p)=>{
 			
 	}else{
 		
-		mWin.reload();
+		MWin_App.reload();
 		
 	}
 }
@@ -158,7 +172,7 @@ const Refresh = (p)=>{
 const ClearCache = ()=>{
 	/*event.sender.send('tray-removed')*/	
 	
-	var ses = mWin.webContents.session;
+	var ses = MWin_App.webContents.session;
 	var vln = ses.getCacheSize(function(n){
 		var cCheSze = n;
 	});
@@ -181,7 +195,7 @@ const gotoAcc = (p)=>{
 	
 	if(!isN(p)){		
 		
-		const ses = mWin.webContents.session
+		const ses = MWin_App.webContents.session
 		console.log(ses.getUserAgent())
   
 		_mreg='';
@@ -197,34 +211,44 @@ const gotoAcc = (p)=>{
 
 
 const RszeOn = (p)=>{
-	
+
 	_w = config.get('width');
 	_h = config.get('height');
 	_mx = config.get('maximized');
+	_win = p.prev ? MWin_App:MWin_Prev;
+
+	if(p && p.start){
+		if(process.platform == 'darwin'){
+			_h=800;
+			_w=1200;
+		}else{
+			_h=500;
+			_w=800;
+		}
+	}
 	
 	if(!isN(_w) && !isN(_h)){
-		mWin.setSize(_w, _h);
+		_win.setSize(_w, _h);
 	}else{
-		/*mWin.maximize();*/	
+		/*_win.maximize();*/	
 	}
 	
 	if(_mx){
-		mWin.maximize();
+		_win.maximize();
 	}
 	
 	if(!isN(p) && !isN(p.minH) && !isN(p.minW)){
 		
 		if(isN(_w) && isN(_h)){
-			
-			mWin.setSize(p.minW, p.minH);
-			
+			_win.setSize(p.minW, p.minH);
 		}
 		
-		mWin.setMinimumSize(p.minW, p.minH);
+		_win.setMinimumSize(p.minW, p.minH);
 	}
 	
-	mWin.center();
-	mWin.focus();
+	_win.center();
+	_win.focus();
+
 }
 
 const GetDomain = ()=>{

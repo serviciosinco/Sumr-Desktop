@@ -18,7 +18,7 @@ if(require('electron-squirrel-startup')){
 
 const ShortCuts = ()=>{
 
-	LocalSCut.register(mWin, 'Ctrl+0', () => {
+	LocalSCut.register(MWin_App, 'Ctrl+0', () => {
 		
 		if(config.get('menu_dvlp')=='ok'){
             config.set('menu_dvlp', null); 
@@ -36,11 +36,7 @@ const ShortCuts = ()=>{
 
 _eGet.on('_rSze', function(e, a) {   
 	
-	if(process.platform == 'darwin'){
-		RszeOn({ minH:800, minW:1200 }); 
-	}else{
-		RszeOn({ minH:500, minW:800 });
-	}
+	RszeOn({ start:true });
 	
 	_ses.clients = config.get('clients'); 
 	_ses.user = config.get('user');
@@ -49,7 +45,7 @@ _eGet.on('_rSze', function(e, a) {
 	
 	if(!isN(_ses.clients) && !isN(_ses.user)){
 		
-		mWin.webContents.send('_r_set',{ 
+		MWin_App.webContents.send('_r_set',{ 
 			cl:_ses.clients, 
 			us:_ses.user,
 			acc:_ses.account, 
@@ -71,7 +67,7 @@ _eGet.on('_m_clr', function(e, a) {
 	config.set('account', null);
 	config.set('subdomain', null);
 	
-	mWin.webContents.send(a.cl);
+	MWin_App.webContents.send(a.cl);
 });
 
 _eGet.on('_m_bdgtot', function(e, a) {  

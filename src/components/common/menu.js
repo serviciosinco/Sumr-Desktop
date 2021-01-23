@@ -148,15 +148,15 @@ const setBar = (p)=>{
 	                submenu:[
 	                {
 		            	label:i18n.__('developer_tools_free'),
-						click:()=>{ mWin.webContents.openDevTools({ mode:'detach' }) }    
+						click:()=>{ MWin_App.webContents.openDevTools({ mode:'detach' }) }    
 	                },
 	                {
 		            	label:i18n.__('developer_tools_right'),
-						click:()=>{ mWin.webContents.openDevTools({ mode:'right' }) }    
+						click:()=>{ MWin_App.webContents.openDevTools({ mode:'right' }) }    
 	                },
 	                {
 		            	label:i18n.__('developer_tools_left'),
-						click:()=>{ mWin.webContents.openDevTools({ mode:'left' }) }    
+						click:()=>{ MWin_App.webContents.openDevTools({ mode:'left' }) }    
 	                }]
 	            }
 	        ]};
