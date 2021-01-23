@@ -95,10 +95,10 @@ app.on('ready',()=>{
 	createWindow();
 	ShortCuts();
 	
-	if(isMac()){
+	//if(isMac()){
 		setBar();
 		barIcn();
-	}
+	//}
     
 });
 

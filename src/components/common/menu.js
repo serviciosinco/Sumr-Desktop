@@ -188,9 +188,9 @@ const barIcn = ()=>{
   	appIcon.setToolTip('SUMR in the tray.')
   	appIcon.setContextMenu(contextMenu)
   	
-  	if(isMac()){
+  	//if(isMac()){
   		app.dock.bounce( 'informational' )
-  	}
+  	//}
 	
 };
 
