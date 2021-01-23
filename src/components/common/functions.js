@@ -81,8 +81,7 @@ const createWindow = (p)=>{
 		mWin.setAutoHideMenuBar(true);
 	}
 
-	//mWin.show();
-	
+	mWin.show();
   
 	mWin.on('closed', function(){
         mWin = null;
@@ -116,7 +115,7 @@ const LoadContent = (p)=>{
 		_lurl = encodeURI(p.u);
 		
 		mWin.loadURL(_lurl);
-		//mWin.show();
+		mWin.show();
 	
 	}else{
 		
@@ -247,7 +246,7 @@ const GoToAccounts = ()=>{
 }
 
 const Log = (t)=>{
-	if(!isDev()){
+	if(isDev()){
 		log.info(t);
 	}
 }
