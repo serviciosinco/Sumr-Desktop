@@ -2,15 +2,24 @@ const path = require('path');
 const fs = require('fs');
 const zlib = require('zlib');
 const zip = zlib.createGzip();
+const { utils: { fromBuildIdentifier } } = require('@electron-forge/core');
+
+
+if(process.env.IS_BETA){
+  var envVersion = 'beta';
+}else{
+  var envVersion = 'prod';
+}
+
 const pname = {
-  assets:'./out/make/assets/',
+  assets:`./out/${envVersion}/make/assets/`,
   path:{
-    win:'./out/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe',
-    mac:'./out/make/SUMR-1.0.0.dmg'
+    win:`./out/${envVersion}/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe`,
+    mac:`./out/${envVersion}/make/SUMR-1.0.0.dmg`
   },
   dist:{
-    win:'./out/SUMR_win_x64.exe.zip',
-    mac:'./out/SUMR_mac_x64.dmg.zip'
+    win:`./out/${envVersion}/SUMR_win_x64.exe.zip`,
+    mac:`./out/${envVersion}/SUMR_mac_x64.dmg.zip`
   }
 };
 //const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
@@ -40,7 +49,9 @@ const DoZip = async (source, target)=>{
 }
 
 module.exports = {
+    buildIdentifier: envVersion,
     packagerConfig: {
+      appBundleId: fromBuildIdentifier({ beta: 'com.sumr-beta.desktop', prod: 'com.sumr.desktop' }),
       icon: `${pname.assets}icon.icns`,
       prune: true,
       junk: true,
@@ -90,7 +101,7 @@ module.exports = {
                 x: 160,
                 y: 220,
                 type: 'file',
-                path: path.resolve(__dirname, 'out/SUMR-darwin-x64/SUMR.app')
+                path: path.resolve(__dirname, `out/${envVersion}/SUMR-darwin-x64/SUMR.app`)
               },
               {
                 x: 2000,
@@ -153,8 +164,8 @@ module.exports = {
           DoZip(pname.path.mac, pname.dist.mac)
           .then( ()=> { 
             if(fs.existsSync(pname.dist.mac)){ 
-             fs.rmdirSync('./out/make/', { recursive:true }); 
-             fs.rmdirSync('./out/SUMR-darwin-x64/', { recursive:true }); 
+             fs.rmdirSync(`./out/${envVersion}/make/`, { recursive:true }); 
+             fs.rmdirSync(`./out/${envVersion}/SUMR-darwin-x64/`, { recursive:true }); 
             }
           });
         }
@@ -163,7 +174,7 @@ module.exports = {
           DoZip(pname.path.win, pname.dist.win)
           .then( ()=> { 
             if(fs.existsSync(pname.dist.win)){ 
-              fs.rmdirSync('./out/make/', { recursive:true }); 
+              fs.rmdirSync(`./out/${envVersion}/make/`, { recursive:true }); 
             }
           });
         }
