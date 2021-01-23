@@ -6,6 +6,8 @@ const config = new Config();
 const { GetGlobal } = require('./globals');
 const _ses={};
 
+Mwin_Fail = false;
+Mwin_Try = 0;
 MWin_Prev = null;
 MWin_App = null;
 
@@ -106,28 +108,63 @@ const createWindow = (p)=>{
 
 }
 
+const PreloadClose = ()=>{
+	if(MWin_Prev){
+		MWin_Prev.close();
+	}
+}
+
 const LoadContent = (p)=>{
 	
 	if(!isN(p) && !isN(p.u) && isOnline()){
 		
-	    var webContents = MWin_App.webContents;
+		var webContents = MWin_App.webContents,
+			_lurl = encodeURI(p.u);
 	    
-	    webContents.on('did-finish-load', function(e, status, newUrl) {
-	        LogShow(status);
+	    webContents.on('did-finish-load', ()=>{
+
 	        LogShow('did-finish-load:'+p.u);
 			config.set('url_last', p.u);
-			
-			RszeOn({ start:true, prev:true }); 
 
-			setTimeout(()=>{
-				MWin_Prev.close();
-				MWin_App.show();
-			}, 100);
-			
-	    }); 
+			console.log(Mwin_Fail);
+			console.log(Mwin_Try);
 
-		_lurl = encodeURI(p.u);
-		
+			if(!Mwin_Fail){
+
+				RszeOn({ start:true, prev:true }); 
+
+				setTimeout(()=>{
+					PreloadClose();
+					MWin_App.show();
+				}, 100);
+				
+			}else{
+
+				Mwin_Try++;
+				Mwin_Fail = false;
+
+				if(Mwin_Try < 5){
+					setTimeout(()=>{
+						MWin_App.loadURL(_lurl);
+					}, 20000);
+				}else{
+
+					Mwin_Try=0;
+					let code = `let body = document.body;
+								body.classList.add('retry');`;
+					
+					MWin_Prev.webContents.executeJavaScript(code);
+
+				}
+
+			}
+
+		}); 
+
+		webContents.on('did-fail-load', (e,errorCode)=>{
+			Mwin_Fail = true;
+		}); 
+
 		MWin_App.loadURL(_lurl);
 		//MWin_App.show();
 	
@@ -285,5 +322,6 @@ module.exports = {
 	gotoAcc,
 	RszeOn,
 	GoToAccounts,
-	LogShow
+	LogShow,
+	PreloadClose
 };

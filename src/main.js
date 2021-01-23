@@ -8,7 +8,7 @@ const _eSnd = electron.ipcRenderer;
 const path = require('path');
 const url = require('url');
 const { setBar, barIcn } = require('./components/common/menu');
-const { isN, isMac, RszeOn, createWindow, LogShow } = require('./components/common/functions');
+const { isN, isMac, RszeOn, createWindow, LogShow, PreloadClose } = require('./components/common/functions');
 const _ses={};
  
 
@@ -34,7 +34,7 @@ const ShortCuts = ()=>{
   
 
 
-_eGet.on('_rSze', function(e, a) {   
+_eGet.on('_rSze', function(e, a){
 	
 	RszeOn({ start:true });
 	
@@ -79,6 +79,11 @@ _eGet.on('_shw_cl', function(e, a) {
 	gotoAcc({ url:a.url });
 });
 
+
+_eGet.on('_rTry', function(e, a){
+	PreloadClose();
+	createWindow();
+});
 
   
 app.on('ready',()=>{

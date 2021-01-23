@@ -1,5 +1,6 @@
 :root {
-	--main-bg-color:#693776;
+    --main-bg-color:#693776;
+    --second-bg-color:#9a57ab;
 }
 
 @-webkit-keyframes lder {
@@ -11,8 +12,26 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-  
 
+@font-face {
+    font-family: 'Economica';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(font/Economica-Regular.woff) format('woff');
+}
+
+@font-face {
+    font-family: 'Economica';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(font/Economica-Bold.woff) format('woff');
+}
+
+  
+body{ font-family: 'Economica', Arial, Helvetica, sans-serif; font-style: normal; }
+h1,h2{ margin:0; padding:0; }
 ._anm{ -webkit-transition-property: all; -moz-transition-property: all; -ms-transition-property: all; -o-transition-property: all; transition-property: all; -webkit-transition-duration: 0.3s; -moz-transition-duration: 0.3s; -ms-transition-duration: 0.3s; -o-transition-duration: 0.3s; transition-duration: 0.3s; -webkit-transition-timing-function: ease; -moz-transition-timing-function: ease; -ms-transition-timing-function: ease; -o-transition-timing-function: ease; transition-timing-function: ease; -webkit-transition-delay: 0s; -moz-transition-delay: 0s; -ms-transition-delay: 0s; -o-transition-delay: 0s; transition-delay: 0s;}
 
 .__main_ldr{ height: 100%; width: 100%; display:block; position: absolute; z-index: 9999999999; color: white; font-family: Economica; text-transform: uppercase; text-align: center; left: 0; top: 0; }
@@ -24,3 +43,10 @@
 .__main_ldr .arc-rotate2 .loader .load { position: relative;border: 3px solid #707070;border-radius: 50%;border-top: 3px solid var(--main-bg-color);width: 35px;height: 35px;top: 22%;left: 22%;-webkit-animation: lder 2s linear infinite;animation: lder 2s linear infinite;}
 .__main_ldr .arc-rotate2 .loader .arc::before { border-color: #FFF; opacity: .3; }
 .__main_ldr .arc-rotate2 .loader .arc::after { border-color: transparent; border-bottom-color: #FFF; -webkit-animation: rotate 1s infinite linear; animation: rotate 1s infinite linear; }
+
+.retry-box{ display: none; position:absolute; width:200px; height:150px; top:50%; left:50%; margin-left: -100px; margin-top: -75px; text-align: center; color:white; }
+.retry-box button{ cursor: pointer; border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; margin-top: 20px; background-color: var(--main-bg-color); padding: 6px 10px; border:0; text-transform: uppercase; font-family: 'Economica'; font-size:13px; font-weight: 400; color:white; }
+.retry-box button:hover{ background-color:var(--second-bg-color); }
+
+body.retry .__main_ldr{ display: none; }
+body.retry .retry-box{ display: block; }
