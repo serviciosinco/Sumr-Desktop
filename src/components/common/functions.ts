@@ -74,7 +74,7 @@ export const createWindow_opt = (prev:boolean = false)=>{
 	};
 
 	if(prev){ data.show = true; }
-	if(!isMac()){ data.frame=true; }
+	if(!isMac() && !prev){ data.frame=true; }
 	return data;
 
 }
