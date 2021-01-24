@@ -16,13 +16,13 @@ const session = { subdomain:'' };
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
-var Mwin_Fail:boolean = false;
-var Mwin_Try_Max:number = 0;
-var Mwin_Try:number = 0;
-
-
 export var MWin_Prev:any;
 export var MWin_App:any;
+
+var Mwin_App_Fail:boolean = false;
+var MWin_Prev_Fail:boolean = false;
+var Mwin_App_Try_Max:number = 0;
+var Mwin_App_Try:number = 0;
 
 const isDev_f = ()=>{
 	return isDev;
@@ -30,10 +30,10 @@ const isDev_f = ()=>{
 
 if(isDev_f()){
 	var log = require('electron-log');
-	Mwin_Try_Max = 2;
+	Mwin_App_Try_Max = 2;
 }else{
 	var log = null;
-	Mwin_Try_Max = 5;
+	Mwin_App_Try_Max = 5;
 }
 
 
@@ -164,10 +164,10 @@ export const LoadContent = (p:{ u:string })=>{
 	        LogShow('did-finish-load:'+p.u);
 			DataSet('url_last', p.u);
 
-			console.log(Mwin_Fail);
-			console.log(Mwin_Try);
+			console.log(Mwin_App_Fail);
+			console.log(Mwin_App_Try);
 
-			if(!Mwin_Fail){
+			if(!Mwin_App_Fail){
 
 				RszeOn({ start:true, prev:true }); 
 
@@ -178,16 +178,16 @@ export const LoadContent = (p:{ u:string })=>{
 				
 			}else{
 
-				Mwin_Try++;
-				Mwin_Fail = false;
+				Mwin_App_Try++;
+				Mwin_App_Fail = false;
 
-				if(Mwin_Try < Mwin_Try_Max){
+				if(Mwin_App_Try < Mwin_App_Try_Max){
 					setTimeout(()=>{
 						MWin_App.loadURL(_lurl);
 					}, 20000);
 				}else{
 
-					Mwin_Try=0;
+					Mwin_App_Try=0;
 					let code = `let body = document.body;
 								body.classList.add('retry');`;
 					
@@ -200,10 +200,11 @@ export const LoadContent = (p:{ u:string })=>{
 		}); 
 
 		MWin_App_C.on('did-fail-load', (e:object, errorCode:number|string)=>{
-			Mwin_Fail = true;
-		}); 
+			Mwin_App_Fail = true;
+		});
 
 		MWin_Prev_C.on('did-fail-load', (e:object, errorCode:number|string)=>{
+			MWin_Prev_Fail = true;
 			PreloadClose();
 		});
 
