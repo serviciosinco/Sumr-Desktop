@@ -126,12 +126,12 @@ export const createWindow = (p:tpObject={})=>{
 		MWin_App.setAutoHideMenuBar(true);
 	}
   
-	MWin_App.on('close', function(e){
+	MWin_App.on('closed', function(e:any){
 		e.preventDefault();
         MWin_App = null;
 	});
 	
-	MWin_Prev.on('close', function(e){
+	MWin_Prev.on('closed', function(e:any){
 		e.preventDefault();
         MWin_Prev = null;
     });
