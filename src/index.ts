@@ -97,3 +97,8 @@ module.exports = {
     	icon: path.resolve(__dirname, '/build/icon.icns')
 	}
 }
+
+
+process.on('uncaughtException', (err) => {
+	console.log(err);
+});
