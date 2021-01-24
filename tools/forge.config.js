@@ -71,7 +71,7 @@ module.exports = {
         config: {
           name: 'SUMR',
           setupIcon: `${pname.assets}icon.ico`,
-          //iconUrl: 'icon.ico',
+          iconUrl: path.resolve(__dirname, `./../make/assets/icon.co`),
           loadingGif: `${pname.assets}installer.gif`
         }
       },
