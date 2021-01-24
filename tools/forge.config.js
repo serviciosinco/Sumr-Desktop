@@ -18,7 +18,7 @@ const pname = {
     mac:`./out/${envVersion}/make/SUMR-1.0.0.dmg`
   },
   dist:{
-    win:`./out/${envVersion}/SUMR_win_x64_Setup.zip`,
+    win:`./out/${envVersion}/SUMR_win_x64_Setup.exe.zip`,
     mac:`./out/${envVersion}/SUMR_mac_x64.dmg.zip`
   }
 };
