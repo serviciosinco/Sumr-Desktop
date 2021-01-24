@@ -15,6 +15,7 @@ type tpObject = {
 const session = { subdomain:'' };
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: any;
 
 export var MWin_Prev:any;
 export var MWin_App:any;
@@ -62,8 +63,8 @@ export const createWindow_opt = (prev:boolean = false)=>{
 		title:'SUMR',
 		width:400, 
 		height:500,
-		frame:false,
-		show:false,
+		frame: ( !isMac() && !prev ) ? true : false,
+		show: prev ? true : false,
 		titleBarStyle:'hidden',
 		backgroundColor: '#23243D',
 		webPreferences: {
@@ -72,9 +73,7 @@ export const createWindow_opt = (prev:boolean = false)=>{
 			nodeIntegration: true
 		}
 	};
-
-	if(prev){ data.show = true; }
-	if(!isMac() && !prev){ data.frame=true; }
+	
 	return data;
 
 }
