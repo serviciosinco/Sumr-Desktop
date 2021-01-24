@@ -126,8 +126,14 @@ export const createWindow = (p:tpObject={})=>{
 		MWin_App.setAutoHideMenuBar(true);
 	}
   
-	MWin_App.on('closed', function(){
+	MWin_App.on('close', function(e){
+		e.preventDefault();
         MWin_App = null;
+	});
+	
+	MWin_Prev.on('close', function(e){
+		e.preventDefault();
+        MWin_Prev = null;
     });
 
 	MWin_App.on('resize', () => {
