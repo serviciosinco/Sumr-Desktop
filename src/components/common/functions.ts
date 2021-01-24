@@ -155,10 +155,11 @@ export const LoadContent = (p:{ u:string })=>{
 	
 	if(!isN(p) && !isN(p.u) && isOnline()){
 		
-		var webContents = MWin_App.webContents,
+		var MWin_App_C = MWin_App.webContents,
+			MWin_Prev_C = MWin_Prev.webContents,
 			_lurl = encodeURI( p.u );
 	    
-	    webContents.on('did-finish-load', ()=>{
+		MWin_App_C.on('did-finish-load', ()=>{
 
 	        LogShow('did-finish-load:'+p.u);
 			DataSet('url_last', p.u);
@@ -198,16 +199,12 @@ export const LoadContent = (p:{ u:string })=>{
 
 		}); 
 
-		webContents.on('did-fail-load', (e:object, errorCode:number|string)=>{
+		MWin_App_C.on('did-fail-load', (e:object, errorCode:number|string)=>{
 			Mwin_Fail = true;
 		}); 
 
-		MWin_Prev.on('did-fail-load', (e:object, errorCode:number|string)=>{
+		MWin_Prev_C.on('did-fail-load', (e:object, errorCode:number|string)=>{
 			PreloadClose();
-		}); 
-
-		MWin_Prev.on('ready-to-show', ()=>{
-			MWin_Prev.show()
 		});
 
 		MWin_App.loadURL(_lurl);
