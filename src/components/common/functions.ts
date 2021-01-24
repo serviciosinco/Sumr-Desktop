@@ -1,15 +1,28 @@
-const electron = require('electron')
-const { BrowserWindow } = electron
-const Config = require('electron-store');
-const isDev = require('electron-is-dev');
-const config = new Config();
-const { GetGlobal } = require('./globals');
-const _ses={};
+import electron from 'electron';
+import { BrowserWindow } from 'electron';
+import isDev from 'electron-is-dev';
+import LocalSCut from 'electron-localshortcut';
 
-Mwin_Fail = false;
-Mwin_Try = 0;
-MWin_Prev = null;
-MWin_App = null;
+import GetGlobal from './globals';
+import { DataSet, DataGet } from './store';
+import { setBar } from './menu';
+
+
+type tpObject = {
+    [key: string]: string|number|boolean|object
+}
+
+const session = { subdomain:'' };
+
+declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
+
+var Mwin_Fail:boolean = false;
+var Mwin_Try_Max:number = 0;
+var Mwin_Try:number = 0;
+
+
+export var MWin_Prev:any;
+export var MWin_App:any;
 
 const isDev_f = ()=>{
 	return isDev;
@@ -17,8 +30,10 @@ const isDev_f = ()=>{
 
 if(isDev_f()){
 	var log = require('electron-log');
+	Mwin_Try_Max = 2;
 }else{
 	var log = null;
+	Mwin_Try_Max = 5;
 }
 
 
@@ -37,13 +52,13 @@ const isOnline = ()=>{
 }
 
 
-const isMac = ()=>{
+export const isMac = ()=>{
 	if(process.platform == 'darwin'){ return true; }else{ return false; }
 }
 
-const createWindow_opt = (prev)=>{
+export const createWindow_opt = (prev:boolean = false)=>{
 
-	let data  = { 
+	let data:tpObject = { 
 		title:'SUMR',
 		width:400, 
 		height:500,
@@ -64,26 +79,44 @@ const createWindow_opt = (prev)=>{
 
 }
 
-const createWindow = (p)=>{	
+
+export const ShortCuts = ()=>{
+
+	LocalSCut.register(MWin_App, 'Ctrl+0', () => {
+		
+		if(DataGet('menu_dvlp')=='ok'){
+            DataSet('menu_dvlp', null); 
+        }else{
+        	DataSet('menu_dvlp', 'ok'); 
+        }
+		                
+		setBar();
+		
+    });	
+
+}
+
+export const createWindow = (p:tpObject={})=>{	
 	
-	_ses.subdomain = config.get('subdomain');
+	session.subdomain = DataGet('subdomain') ? DataGet('subdomain') : '';
 	
 	var _mreg = '', _url='', __op_prev = createWindow_opt(true), __op = createWindow_opt();
 
-	if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
+	if(DataGet('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 	
-	if(!isN(_ses.subdomain) || (!isN(p) && !isN(p.main) && p.main == 'ok')){
-		config.set('menu_main_clients', 'ok');
-		_url = 'https://'+_ses.subdomain+'.'+GetDomain()+'/?_dsktp=ok&__r='+Math.random()+_mreg;
+	if(!isN(session.subdomain) || (!isN(p) && !isN(p.main) && p.main == 'ok')){
+		DataSet('menu_main_clients', 'ok');
+		_url = 'https://'+session.subdomain+'.'+GetDomain()+'/?_dsktp=ok&__r='+Math.random()+_mreg;
 	}else{
-		config.set('menu_main_clients', 'no');
+		DataSet('menu_main_clients', 'no');
 		_url = GoToAccounts();
 	}
 	
 	MWin_App = new BrowserWindow(__op);
 	MWin_Prev = new BrowserWindow(__op_prev);
 
-	MWin_Prev.loadFile('index.html');
+	//MWin_Prev.loadFile('index.html');
+	MWin_Prev.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
 	MWin_App.setTitle('SUMR');
 	LoadContent({ u:_url });
@@ -92,8 +125,6 @@ const createWindow = (p)=>{
 	if(!isMac()){
 		MWin_App.setAutoHideMenuBar(true);
 	}
-
-	//MWin_App.show();
   
 	MWin_App.on('closed', function(){
         MWin_App = null;
@@ -101,30 +132,30 @@ const createWindow = (p)=>{
 
 	MWin_App.on('resize', () => {
 		let size = MWin_App.getSize();	
-		config.set('width', size[0]);
-		config.set('height', size[1]);
-		config.set('maximized', MWin_App.isMaximized());
+		DataSet('width', size[0]);
+		DataSet('height', size[1]);
+		DataSet('maximized', MWin_App.isMaximized());
 	});
 
 }
 
-const PreloadClose = ()=>{
+export const PreloadClose = ()=>{
 	if(MWin_Prev){
 		MWin_Prev.close();
 	}
 }
 
-const LoadContent = (p)=>{
+export const LoadContent = (p:{ u:string })=>{
 	
 	if(!isN(p) && !isN(p.u) && isOnline()){
 		
 		var webContents = MWin_App.webContents,
-			_lurl = encodeURI(p.u);
+			_lurl = encodeURI( p.u );
 	    
 	    webContents.on('did-finish-load', ()=>{
 
 	        LogShow('did-finish-load:'+p.u);
-			config.set('url_last', p.u);
+			DataSet('url_last', p.u);
 
 			console.log(Mwin_Fail);
 			console.log(Mwin_Try);
@@ -143,7 +174,7 @@ const LoadContent = (p)=>{
 				Mwin_Try++;
 				Mwin_Fail = false;
 
-				if(Mwin_Try < 5){
+				if(Mwin_Try < Mwin_Try_Max){
 					setTimeout(()=>{
 						MWin_App.loadURL(_lurl);
 					}, 20000);
@@ -161,7 +192,7 @@ const LoadContent = (p)=>{
 
 		}); 
 
-		webContents.on('did-fail-load', (e,errorCode)=>{
+		webContents.on('did-fail-load', (e:object, errorCode:number|string)=>{
 			Mwin_Fail = true;
 		}); 
 
@@ -175,23 +206,21 @@ const LoadContent = (p)=>{
 	}
 }
 
-
-const Refresh = (p)=>{
+export const Refresh = (p:tpObject={})=>{
 	
 	if(!isN(p) && !isN(p.dvlp)){
 		
-		_mreg = '';
-		url = config.get('url_last');
+		var _mreg = '';
+		var url:string = DataGet('url_last');
 		
-		
-		if(config.get('menu_dvlp_sv')=='ok'){
+		if(DataGet('menu_dvlp_sv')=='ok'){
 			_mreg=_mreg+'&Sv=ok'; 
 		}else{
 			var url = url.replace('&Sv=ok', '');
 		}
 		
 		
-		if(config.get('menu_dvlp_test') == 'ok'){
+		if(DataGet('menu_dvlp_test') == 'ok'){
 			var url_f = url.replace( GetGlobal('domain_production'), GetGlobal('domain_tester'));
 		}else{
 			var url_f = url.replace( GetGlobal('domain_tester'), GetGlobal('domain_production') );
@@ -206,11 +235,11 @@ const Refresh = (p)=>{
 	}
 }
 	
-const ClearCache = ()=>{
+export const ClearCache = ()=>{
 	/*event.sender.send('tray-removed')*/	
 	
 	var ses = MWin_App.webContents.session;
-	var vln = ses.getCacheSize(function(n){
+	var vln = ses.getCacheSize(function(n:string|number){
 		var cCheSze = n;
 	});
 
@@ -220,7 +249,7 @@ const ClearCache = ()=>{
 	});		
 }
 
-const isN = (p)=>{ 
+export const isN = (p:any)=>{ 
 	try{
 		if(p==undefined || p==null || p==''){ return true;}else{return false;} 
 	}catch(err) {
@@ -228,18 +257,19 @@ const isN = (p)=>{
 	}
 }
 
-const gotoAcc = (p)=>{
+export const gotoAcc = (p:tpObject)=>{
 	
 	if(!isN(p)){		
 		
-		const ses = MWin_App.webContents.session
-		console.log(ses.getUserAgent())
-  
-		_mreg='';
+		const ses = MWin_App.webContents.session;
+		var _mreg:string = '' ;
+
+		console.log(ses.getUserAgent());
+		
 		_mreg=_mreg+'&_dsktp=ok';
 		
-		config.set('menu_main_clients', 'ok');
-		if(config.get('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
+		DataSet('menu_main_clients', 'ok');
+		if(DataGet('menu_dvlp_sv')=='ok'){ _mreg=_mreg+'&Sv=ok'; }
 		
 		LoadContent({ u:p.url+'?__r='+Math.random()+_mreg });
 		
@@ -247,12 +277,12 @@ const gotoAcc = (p)=>{
 }
 
 
-const RszeOn = (p)=>{
+export const RszeOn = (p:tpObject)=>{
 
-	_w = config.get('width');
-	_h = config.get('height');
-	_mx = config.get('maximized');
-	_win = p.prev ? MWin_App:MWin_Prev;
+	var _w:number = DataGet('width'),
+		_h:number = DataGet('height'),
+		_mx:boolean = DataGet('maximized'),
+		_win:any = p.prev ? MWin_App:MWin_Prev;
 
 	if(p && p.start){
 		if(process.platform == 'darwin'){
@@ -264,7 +294,7 @@ const RszeOn = (p)=>{
 		}
 	}
 	
-	if(!isN(_w) && !isN(_h)){
+	if(_w && _h){
 		_win.setSize(_w, _h);
 	}else{
 		/*_win.maximize();*/	
@@ -292,7 +322,7 @@ const GetDomain = ()=>{
 
 	var dmn = '';
 
-	if(config.get('menu_dvlp_test')=='ok'){
+	if(DataGet('menu_dvlp_test')=='ok'){
 		dmn = GetGlobal('domain_tester');
 	}else{
 		dmn = GetGlobal('domain_production');
@@ -301,27 +331,13 @@ const GetDomain = ()=>{
 	return dmn;
 }
 
-const GoToAccounts = ()=>{
+export const GoToAccounts = ()=>{
 	let _u = 'https://account.'+GetDomain()+'/?_dsktp=ok&__r='+Math.random();
 	return _u;	
 }
 
-const LogShow = (t)=>{
+export const LogShow = ( t: string | object )=>{
 	if(isDev_f() && !isN(log)){
 		log.info(t);
 	}
 }
-
-module.exports = {
-    createWindow,
-	LoadContent,
-	Refresh,
-	isMac,
-	isN,
-	ClearCache,
-	gotoAcc,
-	RszeOn,
-	GoToAccounts,
-	LogShow,
-	PreloadClose
-};

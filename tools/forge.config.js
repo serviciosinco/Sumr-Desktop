@@ -56,14 +56,14 @@ module.exports = {
       prune: true,
       junk: true,
       overwrite:true,
-      ignore:[
+      /*ignore:[
         'assets/',
         'build/', 
         'forge.config.js',
         '.nvmrc',
         '.gitignore',
         'README.md'
-      ]
+      ]*/
     },
     makers: [
       {
@@ -101,7 +101,7 @@ module.exports = {
                 x: 160,
                 y: 220,
                 type: 'file',
-                path: path.resolve(__dirname, `out/${envVersion}/SUMR-darwin-x64/SUMR.app`)
+                path: path.resolve(__dirname, `./../out/${envVersion}/SUMR-darwin-x64/SUMR.app`)
               },
               {
                 x: 2000,
@@ -182,6 +182,21 @@ module.exports = {
 
       }
 
-    }
+    },
+
+    
+    plugins: [
+      ['@electron-forge/plugin-webpack', {
+        mainConfig: './tools/main/webpack.config.js',
+        renderer: {
+          config: './tools/render/webpack.config.js',
+          entryPoints: [{
+            html: './src/index.html',
+            js: './src/renderer.ts',
+            name: 'main_window'
+          }]
+        }
+      }]
+    ]
 
   }
