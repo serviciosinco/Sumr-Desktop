@@ -202,6 +202,10 @@ export const LoadContent = (p:{ u:string })=>{
 			Mwin_Fail = true;
 		}); 
 
+		MWin_Prev.on('ready-to-show', ()=>{
+			MWin_Prev.show()
+		});
+
 		MWin_App.loadURL(_lurl);
 		//MWin_App.show();
 	
