@@ -202,6 +202,10 @@ export const LoadContent = (p:{ u:string })=>{
 			Mwin_Fail = true;
 		}); 
 
+		MWin_Prev.on('did-fail-load', (e:object, errorCode:number|string)=>{
+			PreloadClose();
+		}); 
+
 		MWin_Prev.on('ready-to-show', ()=>{
 			MWin_Prev.show()
 		});
