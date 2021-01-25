@@ -1,3 +1,4 @@
+version: 2.1
 # name of your github action
 name: CI
 # this will help you specify where to run 
@@ -8,7 +9,7 @@ on:
       - master
 # this is where the magic happens, each job happens in parallel btw
 jobs:
-  build_on_mac:
+  build:
     docker:
       - image: buildpack-deps:trusty
     runs-on: macOS-latest
@@ -35,37 +36,3 @@ jobs:
       - run:
           name: Generate Builds
           command: npm run make
-
-
-  build_on_win:
-    runs-on: windows-2016
-    steps:
-      - checkout
-      - run:
-          name: Update NPM
-          command: "sudo npm install -g npm"
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm install
-      - run:
-          name: Install dpkg and fakeroot
-          command: |
-            sudo apt-get update -y
-            sudo apt-get install -y dpkg fakeroot
-
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-      - run:
-          name: Generate Builds
-          command: npm run make
-
-
-workflows:
-  build-test-deploy:
-    jobs:
-      - build_on_mac
-      - build_on_win
