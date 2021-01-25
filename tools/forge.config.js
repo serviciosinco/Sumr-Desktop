@@ -21,7 +21,7 @@ const pname = {
     mac:`${path_out}make/SUMR-1.0.0.dmg`
   },
   zip:{
-    win:`${path_out}SUMR_win_x64.zip`,
+    win:`${path_out}SUMR_win_x64_Setup.zip`,
     mac:`${path_out}SUMR_mac_x64.zip`
   }
 };
