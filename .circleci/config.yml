@@ -35,7 +35,9 @@ jobs:
       - run:
           name: Generate Builds
           command: npm run make
-build_on_win:
+
+
+  build_on_win:
     runs-on: windows-2016
     steps:
       - checkout
@@ -60,3 +62,10 @@ build_on_win:
       - run:
           name: Generate Builds
           command: npm run make
+
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - build_on_mac
+      - build_on_win
