@@ -9,6 +9,8 @@ on:
 # this is where the magic happens, each job happens in parallel btw
 jobs:
   build_on_mac:
+    docker:
+      - image: buildpack-deps:trusty
     runs-on: macOS-latest
     steps:
       - checkout
