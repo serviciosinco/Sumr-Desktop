@@ -9,7 +9,7 @@ if(require('electron-squirrel-startup')){ app.quit(); }
 StoreStart();
 
 const _eGet = electron.ipcMain;
-const _eSnd = electron.ipcRenderer;
+//const _eSnd = electron.ipcRenderer;
 const _ses:{ [key: string]: string } = {};
 
 _eGet.on('_rSze', function(e, a){
