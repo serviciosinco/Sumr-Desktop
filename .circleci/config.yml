@@ -1,10 +1,9 @@
 version: 2.1
 jobs:
-  build-build_on_mac:
+  build-windows:
     working_directory: ~/repo
-    runs-on: macOS-latest
     docker:
-      - image: circleci/node:15
+      - image: electronuserland/builder:wine
     steps:
       - checkout
       - run:
