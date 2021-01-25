@@ -1,19 +1,9 @@
 version: 2.1
-# name of your github action
-name: CI
-# this will help you specify where to run 
-on:
-  push:
-    branches:
-    # this will run on the electron branch
-      - master
-# this is where the magic happens, each job happens in parallel btw
-jobs:
-  build:
-    docker:
-      - image: buildpack-deps:trusty
-    runs-on: macOS-latest
-    steps:
+jobs: # a basic unit of work in a run
+  build: # runs not using `Workflows` must have a `build` job as entry point
+    macos:  # indicate that we are using the macOS executor
+      xcode: 11.3.0 # indicate our selected version of Xcode
+    steps: # a series of commands to run
       - checkout
       - run:
           name: Update NPM
