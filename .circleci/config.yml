@@ -1,9 +1,40 @@
-version: 2.1
+# name of your github action
+name: CI
+# this will help you specify where to run 
+on:
+  push:
+    branches:
+    # this will run on the electron branch
+      - master
+# this is where the magic happens, each job happens in parallel btw
 jobs:
-  build-windows:
-    working_directory: ~/repo
-    docker:
-      - image: electronuserland/builder:wine
+  build_on_mac:
+    runs-on: macOS-latest
+    steps:
+      - checkout
+      - run:
+          name: Update NPM
+          command: "sudo npm install -g npm"
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Install dpkg and fakeroot
+          command: |
+            sudo apt-get update -y
+            sudo apt-get install -y dpkg fakeroot
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Generate Builds
+          command: npm run make
+build_on_win:
+    runs-on: windows-2016
     steps:
       - checkout
       - run:
