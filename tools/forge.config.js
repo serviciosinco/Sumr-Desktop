@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-const zlib = require('zlib');
-const zip = zlib.createGzip();
+const AdmZip = require('adm-zip');
+
 const { utils: { fromBuildIdentifier } } = require('@electron-forge/core');
 
 
@@ -11,18 +11,20 @@ if(process.env.IS_BETA){
   var envVersion = 'prod';
 }
 
+const path_out = `./out/${envVersion}/`;
+
 const pname = {
-  assets:`./out/${envVersion}/make/assets/`,
+  assets:`${path_out}make/assets/`,
   path:{
-    win:`./out/${envVersion}/make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe`,
-    mac:`./out/${envVersion}/make/SUMR-1.0.0.dmg`
+    make:`${path_out}make/`,
+    win:`${path_out}make/squirrel.windows/x64/SUMR-1.0.0 Setup.exe`,
+    mac:`${path_out}make/SUMR-1.0.0.dmg`
   },
-  dist:{
-    win:`./out/${envVersion}/SUMR_win_x64_Setup.exe.zip`,
-    mac:`./out/${envVersion}/SUMR_mac_x64.dmg.zip`
+  zip:{
+    win:`${path_out}SUMR_win_x64.zip`,
+    mac:`${path_out}SUMR_mac_x64.zip`
   }
 };
-//const WebpackPlugin = require('@electron-forge/plugin-webpack').default;
 
 const DoZip = async (source, target)=>{
 
@@ -30,17 +32,18 @@ const DoZip = async (source, target)=>{
 
     await new Promise((resolve, reject) => {
         
-      var read = fs.createReadStream(source);
-      var write = fs.createWriteStream(target);
-      var stream = read.pipe(zip).pipe(write);
+      //var read = fs.createReadStream(source);
+      //var write = fs.createWriteStream(target);
+      //var stream = read.pipe(zip).pipe(write);
 
-      stream.on('error', (err) => {
-          reject(err);
-      });
-
-      stream.on('finish', ()=>{
+      try {
+        const zip = new AdmZip();
+        zip.addLocalFile(source);
+        zip.writeZip(target);
         resolve();
-      });
+      }catch(error){
+        reject(err);
+      }
 
     });
 
@@ -101,7 +104,7 @@ module.exports = {
                 x: 160,
                 y: 220,
                 type: 'file',
-                path: path.resolve(__dirname, `./../out/${envVersion}/SUMR-darwin-x64/SUMR.app`)
+                path: path.resolve(__dirname, `./.${path_out}SUMR-darwin-x64/SUMR.app`)
               },
               {
                 x: 2000,
@@ -147,13 +150,13 @@ module.exports = {
         }
         
         if(options.platform && options.platform == 'darwin'){
-          if(fs.existsSync(pname.dist.mac)){ 
-            fs.rmdirSync(pname.dist.mac, { recursive:true });
+          if(fs.existsSync(pname.zip.mac)){ 
+            fs.rmdirSync(pname.zip.mac, { recursive:true });
           }
         }
 
         if(options.platform  && options.platform == 'win32'){
-          if(fs.existsSync(pname.dist.win)){ fs.rmdirSync(pname.dist.win, { recursive:true }); }
+          if(fs.existsSync(pname.zip.win)){ fs.rmdirSync(pname.zip.win, { recursive:true }); }
         }
 
       },
@@ -161,21 +164,21 @@ module.exports = {
       postMake: async(forgeConfig, options) => {
 
         if(fs.existsSync(pname.path.mac)){
-          DoZip(pname.path.mac, pname.dist.mac)
-          .then( ()=> { 
-            if(fs.existsSync(pname.dist.mac)){ 
-             fs.rmdirSync(`./out/${envVersion}/make/`, { recursive:true }); 
-             fs.rmdirSync(`./out/${envVersion}/SUMR-darwin-x64/`, { recursive:true }); 
+          DoZip(pname.path.mac, pname.zip.mac)
+          .then( ()=> {
+            if(fs.existsSync(pname.zip.mac)){ 
+             fs.rmdirSync(pname.path.make, { recursive:true }); 
+             fs.rmdirSync(`${path_out}SUMR-darwin-x64/`, { recursive:true });
             }
           });
         }
 
         if(fs.existsSync(pname.path.win)){
-          DoZip(pname.path.win, pname.dist.win)
+          DoZip(pname.path.win, pname.zip.win)
           .then( ()=> { 
-            if(fs.existsSync(pname.dist.win)){ 
-              fs.rmdirSync(`./out/${envVersion}/make/`, { recursive:true });
-              fs.rmdirSync(`./out/${envVersion}/SUMR-win32-x64/`, { recursive:true }); 
+            if(fs.existsSync(pname.zip.win)){ 
+              fs.rmdirSync(pname.path.make, { recursive:true });
+              fs.rmdirSync(`${path_out}SUMR-win32-x64/`, { recursive:true }); 
             }
           });
         }
