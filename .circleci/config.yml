@@ -1,9 +1,10 @@
 version: 2.1
 jobs:
-  build:
+  build-build_on_mac:
     working_directory: ~/repo
+    runs-on: macOS-latest
     docker:
-      - image: circleci/node:11
+      - image: circleci/node:15
     steps:
       - checkout
       - run:
@@ -27,6 +28,3 @@ jobs:
       - run:
           name: Generate Builds
           command: npm run make
-
-      - store_artifacts:
-          path: ~/repo/out/make
